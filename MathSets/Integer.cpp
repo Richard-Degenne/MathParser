@@ -167,8 +167,7 @@ bool Integer::isGreaterThan(Integer const& a) const {
  */
 
 Integer Integer::operator+=(Integer& a) {
-    int i;
-    bool overflow = false;
+    int i,j;
 
     // Normalizing both of the operands
     normalize(a);
@@ -177,14 +176,21 @@ Integer Integer::operator+=(Integer& a) {
     // Foreach digit, starting from units
     for(i=getSize()-1 ; i>=0 ; i--) {
         numbers[i]+=a.numbers[i];
-        if(overflow) {
-            numbers[i]+=ONE;
+
+		// Propagating overflow
+		j = i;
+        while(numbers[j].getOverflow()) {
+			if(j > 0) {
+				numbers[j-1]++;
+				numbers[j].resetOverflow();
+				j--;
+			}
+			else {
+				numbers.insert(numbers.begin(), ONE);
+				numbers[0].resetOverflow();
+				numbers[j+1].resetOverflow();
+			}
         }
-        overflow = numbers[i].getOverflow();
-        numbers[i].resetOverflow(); // Reseting overflow to avoid disturbing further calculations
-    }
-    if (overflow) { // Highest-digit overflow implies expanding the integer
-        numbers.insert(numbers.begin(), ONE);
     }
 
     // Trimming
@@ -229,8 +235,21 @@ Integer Integer::operator-=(Integer& a) {
     return *this;
 }
 
-Integer Integer::operator*=(Integer const& a) { // NIY
-    return *this;
+Integer Integer::operator*=(Integer const& a) {
+	// TODO Make this damn faster (maybe with Karatsuba algorithm?)
+    Integer copy(*this);
+	Integer count(a);
+	Integer ref("0");
+
+	if(a > *this) { // Slight optimization: Be sure to use the lowest operand as counter
+		*this = count;
+		swap(copy, count);
+	}
+
+	while (--count != ref) {
+		*this += copy;
+	}
+	return *this;
 }
 
 Integer Integer::operator/=(Integer const& a) { // NIY
@@ -239,6 +258,30 @@ Integer Integer::operator/=(Integer const& a) { // NIY
 
 Integer Integer::operator%=(Integer const& a) { // NIY
     return *this;
+}
+
+Integer Integer::operator++() {
+	Integer inc("1");
+	*this += inc;
+	return *this;
+}
+
+Integer Integer::operator++(int dummy) {
+	Integer copy(*this);
+	++(*this);
+	return copy;
+}
+
+Integer Integer::operator--() {
+	Integer inc("1");
+	*this -= inc;
+	return *this;
+}
+
+Integer Integer::operator--(int dummy) {
+	Integer copy(*this);
+	--(*this);
+	return copy;
 }
 
 
@@ -255,6 +298,12 @@ Integer operator+(Integer const& a, Integer& b) {
 Integer operator-(Integer const& a, Integer& b) {
     Integer copy(a);
     copy -= b;
+    return copy;
+}
+
+Integer operator*(Integer const& a, Integer const& b) {
+    Integer copy(a);
+    copy *= b;
     return copy;
 }
 

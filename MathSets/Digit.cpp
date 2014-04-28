@@ -268,7 +268,6 @@ Digit Digit::operator*=(Digit const& a) {
 	Digit copy(*this);
 	for (i=0 ; i<a.getValue()-1; i++)
 	{
-		cout << "Adding " << copy.getValue() << " to " << getValue() << endl;
 		*this+=copy;
 	}
     return *this;

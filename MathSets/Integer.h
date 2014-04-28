@@ -48,11 +48,16 @@ public:
     Integer operator*=(Integer const&); // NIY
     Integer operator/=(Integer const&); // NIY
     Integer operator%=(Integer const&); // NIY
+	Integer operator++(); // Pre-fixed increment (++x)
+	Integer operator++(int); // Post-fixed increment (x++)
+	Integer operator--(); // Pre-fixed increment (++x)
+	Integer operator--(int); // Post-fixed increment (x++)
 };
 
 // Long operators overload
 Integer operator+(Integer const&, Integer &);
 Integer operator-(Integer const&, Integer &);
+Integer operator*(Integer const&, Integer const&);
 
 // Relational operators overload
 bool operator==(Integer const&, Integer const&);
