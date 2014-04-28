@@ -282,6 +282,28 @@ Digit Digit::operator%=(Digit const& a) { // NIY
     return *this;
 }
 
+Digit Digit::operator++() {
+	incrementValue();
+	return *this;
+}
+
+Digit Digit::operator++(int dummy) {
+	Digit copy(*this);
+	++(*this);
+	return copy;
+}
+
+Digit Digit::operator--() {
+	decrementValue();
+	return *this;
+}
+
+Digit Digit::operator--(int dummy) {
+	Digit copy(*this);
+	--(*this);
+	return copy;
+}
+
 
 /*
  * Long operators overload

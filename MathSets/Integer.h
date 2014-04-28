@@ -39,10 +39,12 @@ public:
     
     // Methods
     void printTo(std::ostream&) const;
+    bool isEqualTo(Integer const&) const;
+    bool isGreaterThan(Integer const&) const;
     
     // Short operators overload
     Integer operator+=(Integer &);
-    Integer operator-=(Integer const&); // NIY
+    Integer operator-=(Integer &);
     Integer operator*=(Integer const&); // NIY
     Integer operator/=(Integer const&); // NIY
     Integer operator%=(Integer const&); // NIY
@@ -50,6 +52,15 @@ public:
 
 // Long operators overload
 Integer operator+(Integer const&, Integer &);
+Integer operator-(Integer const&, Integer &);
+
+// Relational operators overload
+bool operator==(Integer const&, Integer const&);
+bool operator!=(Integer const&, Integer const&);
+bool operator> (Integer const&, Integer const&);
+bool operator>=(Integer const&, Integer const&);
+bool operator< (Integer const&, Integer const&);
+bool operator<=(Integer const&, Integer const&);
 
 // Stream operators overload
 std::ostream& operator<<(std::ostream&, Integer const&);

@@ -79,6 +79,10 @@ public:
     Digit operator*=(Digit const&);
     Digit operator/=(Digit const&); // NIY
     Digit operator%=(Digit const&); // NIY
+	Digit operator++(); // Pre-fixed increment (++x)
+	Digit operator++(int); // Post-fixed increment (x++)
+	Digit operator--(); // Pre-fixed increment (++x)
+	Digit operator--(int); // Post-fixed increment (x++)
 };
 
 // Long operators overload

@@ -16,11 +16,11 @@ using namespace std;
 
 int main(int argc, const char* argv[])
 {
-	Integer a("26663234");
-	Integer b("324");
-	Integer c(a+b);
+	Integer a("10001");
+	Integer b("2");
+	Integer c(a-b);
 
-	cout << "  " << a << endl << "+ " << b << endl << "= " << c << endl;
+	cout << "  " << a << endl << "- " << b << endl << "= " << c << endl;
 	
 	return EXIT_SUCCESS;
 }

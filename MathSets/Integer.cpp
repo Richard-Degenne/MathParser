@@ -127,6 +127,40 @@ void Integer::printTo(ostream& stream) const {
     }
 }
 
+bool Integer::isEqualTo(Integer const& a) const {
+	if(getSize() == a.getSize())
+	{
+		for(int i=0 ; i<getSize() ; i++)
+		{
+			if(getNumber(i) != a.getNumber(i)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	return false;
+}
+
+bool Integer::isGreaterThan(Integer const& a) const {
+	if(getSize() > a.getSize()) {
+		return true;
+	}
+	else if(getSize() < a.getSize()) {
+		return false;
+	}
+	else {
+		for(int i=0; i<getSize(); i++) {
+			if(getNumber(i) > a.getNumber(i)) {
+				return true;
+			}
+			else if(getNumber(i) < a.getNumber(i)) {
+				return false;
+			}
+		}
+	}
+	return false;
+}
+
 
 /*
  * Short operators overload
@@ -159,7 +193,39 @@ Integer Integer::operator+=(Integer& a) {
     return *this;
 }
 
-Integer Integer::operator-=(Integer const& a) {// NIY
+Integer Integer::operator-=(Integer& a) {
+	if(a>=*this) {
+		Integer toReturn("0");
+		*this = toReturn;
+		return *this;
+	}
+	int i,j;
+
+	// Normalizing both the operands
+	normalize(a);
+	a.normalize(*this);
+
+    // Foreach digit, starting from units
+    for(i=getSize()-1 ; i>=0 ; i--) {
+        numbers[i]-=a.numbers[i];
+
+		// Propagating overflow
+		j = i;
+        while(numbers[j].getOverflow()) {
+			if(j > 0) {
+				numbers[j-1]--;
+				numbers[j].resetOverflow();
+				j--;
+			}
+			else {
+				numbers.erase(numbers.begin());
+			}
+        }
+    }
+	
+    // Trimming
+    trim();
+    a.trim();
     return *this;
 }
 
@@ -184,6 +250,41 @@ Integer operator+(Integer const& a, Integer& b) {
     Integer copy(a);
     copy += b;
     return copy;
+}
+
+Integer operator-(Integer const& a, Integer& b) {
+    Integer copy(a);
+    copy -= b;
+    return copy;
+}
+
+
+/*
+ * Relational operator overload
+ */
+
+bool operator==(Integer const& a, Integer const& b) {
+	return a.isEqualTo(b);
+}
+
+bool operator!=(Integer const& a, Integer const& b) {
+	return !a.isEqualTo(b);
+}
+
+bool operator> (Integer const& a, Integer const& b) {
+	return a.isGreaterThan(b);
+}
+
+bool operator>=(Integer const& a, Integer const& b) {
+	return a.isGreaterThan(b) || a.isEqualTo(b);
+}
+
+bool operator< (Integer const& a, Integer const& b) {
+	return !(a.isGreaterThan(b) || a.isEqualTo(b));
+}
+
+bool operator<=(Integer const& a, Integer const& b) {
+	return !a.isGreaterThan(b);
 }
 
 
