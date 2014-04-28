@@ -18,26 +18,22 @@ using namespace std;
  */
 
 // Base constructor
-Digit::Digit() : overflow(ZERO)
-{
+Digit::Digit() : overflow(ZERO) {
     
 }
 
 // Initialization constructor
-Digit::Digit(digit const source) : value(source)
-{
+Digit::Digit(digit const source) : value(source) {
     Digit();
 }
 
 // Copy constructor
-Digit::Digit(Digit const& source)
-{
+Digit::Digit(Digit const& source) {
 	value = source.getValue();
 	overflow = source.getOverflow();
 }
 
-Digit::Digit(int const source)
-{
+Digit::Digit(int const source) {
     Digit();
 	switch (source) {
 		case 0:
@@ -82,13 +78,11 @@ Digit::Digit(int const source)
  * Getters
  */
 
-digit Digit::getValue() const
-{
+digit Digit::getValue() const {
     return value;
 }
 
-bool Digit::getOverflow() const
-{
+bool Digit::getOverflow() const {
     return overflow;
 }
 
@@ -97,8 +91,7 @@ bool Digit::getOverflow() const
  * Setters
  */
 
-void Digit::setValue(digit newValue)
-{
+void Digit::setValue(digit newValue) {
     switch (newValue) {
         case 0:
             value = ZERO;
@@ -137,8 +130,7 @@ void Digit::setValue(digit newValue)
     }
 }
 
-void Digit::incrementValue()
-{
+void Digit::incrementValue() {
 	switch (getValue())
 	{
 		case ZERO:
@@ -177,8 +169,7 @@ void Digit::incrementValue()
 	}
 }
 
-void Digit::decrementValue()
-{
+void Digit::decrementValue() {
 	switch (getValue())
 	{
 		case ZERO:
@@ -217,13 +208,11 @@ void Digit::decrementValue()
 	}
 }
 
-void Digit::setOverflow()
-{
+void Digit::setOverflow() {
 	overflow = true;
 }
 
-void Digit::resetOverflow()
-{
+void Digit::resetOverflow() {
 	overflow = false;
 }
 
@@ -232,18 +221,15 @@ void Digit::resetOverflow()
  * Methods
  */
 
-void Digit::printTo(ostream& stream) const
-{
+void Digit::printTo(ostream& stream) const {
     stream << value;
 }
 
-bool Digit::isEqualTo(Digit const& a) const
-{
+bool Digit::isEqualTo(Digit const& a) const {
 	return getValue() == a.getValue();
 }
 
-bool Digit::isGreaterThan(Digit const& a) const
-{
+bool Digit::isGreaterThan(Digit const& a) const {
 	return getValue() > a.getValue();
 }
 
@@ -252,14 +238,12 @@ bool Digit::isGreaterThan(Digit const& a) const
  * Short operators overload
  */
 
-Digit Digit::operator=(Digit const& a)
-{
+Digit Digit::operator=(Digit const& a) {
 	setValue(a.getValue());
 	return *this;
 }
 
-Digit Digit::operator+=(Digit const& a)
-{
+Digit Digit::operator+=(Digit const& a) {
 	int i;
 	
 	for(i=0 ; i<a.getValue() ; i++)
@@ -269,8 +253,7 @@ Digit Digit::operator+=(Digit const& a)
 	return *this;
 }
 
-Digit Digit::operator-=(Digit const& a)
-{
+Digit Digit::operator-=(Digit const& a) {
 	int i;
 	
     for(i=0 ; i<a.getValue() ; i++)
@@ -280,8 +263,7 @@ Digit Digit::operator-=(Digit const& a)
 	return *this;
 }
 
-Digit Digit::operator*=(Digit const& a)
-{
+Digit Digit::operator*=(Digit const& a) {
 	int i;
 	Digit copy(*this);
 	for (i=0 ; i<a.getValue()-1; i++)
@@ -292,13 +274,11 @@ Digit Digit::operator*=(Digit const& a)
     return *this;
 }
 
-Digit Digit::operator/=(Digit const& a) // NIY
-{
+Digit Digit::operator/=(Digit const& a) { // NIY
     return *this;
 }
 
-Digit Digit::operator%=(Digit const& a) // NIY
-{
+Digit Digit::operator%=(Digit const& a) { // NIY
     return *this;
 }
 
@@ -307,22 +287,19 @@ Digit Digit::operator%=(Digit const& a) // NIY
  * Long operators overload
  */
 
-Digit operator+(Digit const& a, Digit const& b)
-{
+Digit operator+(Digit const& a, Digit const& b) {
 	Digit copy(a);
 	copy += b;
 	return copy;
 }
 
-Digit operator-(Digit const& a, Digit const& b)
-{
+Digit operator-(Digit const& a, Digit const& b) {
 	Digit copy(a);
 	copy -= b;
 	return copy;
 }
 
-Digit operator*(Digit const& a, Digit const& b)
-{
+Digit operator*(Digit const& a, Digit const& b) {
 	Digit copy(a);
 	copy *= b;
 	return copy;
@@ -333,33 +310,27 @@ Digit operator*(Digit const& a, Digit const& b)
  * Relational operator overload
  */
 
-bool operator==(Digit const& a, Digit const& b)
-{
+bool operator==(Digit const& a, Digit const& b) {
 	return a.isEqualTo(b);
 }
 
-bool operator!=(Digit const& a, Digit const& b)
-{
+bool operator!=(Digit const& a, Digit const& b) {
 	return !a.isEqualTo(b);
 }
 
-bool operator> (Digit const& a, Digit const& b)
-{
+bool operator> (Digit const& a, Digit const& b) {
 	return a.isGreaterThan(b);
 }
 
-bool operator>=(Digit const& a, Digit const& b)
-{
+bool operator>=(Digit const& a, Digit const& b) {
 	return a.isGreaterThan(b) || a.isEqualTo(b);
 }
 
-bool operator< (Digit const& a, Digit const& b)
-{
+bool operator< (Digit const& a, Digit const& b) {
 	return !(a.isGreaterThan(b) || a.isEqualTo(b));
 }
 
-bool operator<=(Digit const& a, Digit const& b)
-{
+bool operator<=(Digit const& a, Digit const& b) {
 	return !a.isGreaterThan(b);
 }
 
@@ -368,8 +339,7 @@ bool operator<=(Digit const& a, Digit const& b)
  * Stream operators overload
  */
 
-ostream& operator<<(ostream& stream, Digit digit)
-{
+ostream& operator<<(ostream& stream, Digit digit) {
     digit.printTo(stream);
     return stream;
 }

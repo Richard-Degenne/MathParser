@@ -17,31 +17,25 @@ using namespace std;
  */
 
 // Base constructor
-Integer::Integer()
-{
+Integer::Integer() {
     numbers.push_back(ZERO);
 }
 
 // Copy constructor
-Integer::Integer(Integer const& source)
-{
+Integer::Integer(Integer const& source) {
     int i;
     
-    for(i=0 ; i<source.getSize() ; i++)
-    {
+    for(i=0 ; i<source.getSize() ; i++) {
         numbers.push_back(source.getNumber(i));
     }
 }
 
 // Most evolved constructor: String parsing
-Integer::Integer(string const source)
-{
+Integer::Integer(string const source) {
     int i;
     
-    for (i=0 ; i<source.size() ; i++)
-    {
-        if (isdigit(source[i]))
-        {
+    for (i=0 ; i<source.size() ; i++) {
+        if (isdigit(source[i])) {
             Digit toPush;
             switch (source[i]) {
                 case '0':
@@ -87,18 +81,15 @@ Integer::Integer(string const source)
  * Getters
  */
 
-int Integer::getSize() const
-{
+int Integer::getSize() const {
     return (int) numbers.size();
 }
 
-vector<Digit>::const_iterator Integer::getBegin() const
-{
+vector<Digit>::const_iterator Integer::getBegin() const {
     return numbers.begin();
 }
 
-Digit Integer::getNumber(int position) const
-{
+Digit Integer::getNumber(int position) const {
     return numbers[position];
 }
 
@@ -107,22 +98,17 @@ Digit Integer::getNumber(int position) const
  * Setters
  */
 
-Integer& Integer::normalize(const Integer& a)
-{
-    if(getSize() < a.getSize())
-    {
-        while (getSize() < a.getSize())
-        {
+Integer& Integer::normalize(const Integer& a) {
+    if(getSize() < a.getSize()) {
+        while (getSize() < a.getSize()) {
             numbers.insert(numbers.begin(), ZERO);
         }
     }
     return *this;
 }
 
-Integer& Integer::trim()
-{
-    while(numbers[0].getValue() == ZERO)
-    {
+Integer& Integer::trim() {
+    while(numbers[0].getValue() == ZERO) {
         numbers.erase(numbers.begin());
     }
     return *this;
@@ -133,12 +119,10 @@ Integer& Integer::trim()
  * Methods
  */
 
-void Integer::printTo(ostream& stream) const
-{
+void Integer::printTo(ostream& stream) const {
     int i;
     
-    for (i=0 ; i<numbers.size() ; i++)
-    {
+    for (i=0 ; i<numbers.size() ; i++) {
         stream << numbers[i];
     }
 }
@@ -148,8 +132,7 @@ void Integer::printTo(ostream& stream) const
  * Short operators overload
  */
 
-Integer Integer::operator+=(Integer& a)
-{
+Integer Integer::operator+=(Integer& a) {
     int i;
     bool overflow = false;
 
@@ -158,18 +141,15 @@ Integer Integer::operator+=(Integer& a)
     a.normalize(*this);
 
     // Foreach digit, starting from units
-    for(i=getSize()-1 ; i>=0 ; i--)
-    {
+    for(i=getSize()-1 ; i>=0 ; i--) {
         numbers[i]+=a.numbers[i];
-        if(overflow)
-        {
+        if(overflow) {
             numbers[i]+=ONE;
         }
         overflow = numbers[i].getOverflow();
         numbers[i].resetOverflow(); // Reseting overflow to avoid disturbing further calculations
     }
-    if (overflow) // Highest-digit overflow implies expanding the integer
-    {
+    if (overflow) { // Highest-digit overflow implies expanding the integer
         numbers.insert(numbers.begin(), ONE);
     }
 
@@ -179,23 +159,19 @@ Integer Integer::operator+=(Integer& a)
     return *this;
 }
 
-Integer Integer::operator-=(Integer const& a) // NIY
-{
+Integer Integer::operator-=(Integer const& a) {// NIY
     return *this;
 }
 
-Integer Integer::operator*=(Integer const& a) // NIY
-{
+Integer Integer::operator*=(Integer const& a) { // NIY
     return *this;
 }
 
-Integer Integer::operator/=(Integer const& a) // NIY
-{
+Integer Integer::operator/=(Integer const& a) { // NIY
     return *this;
 }
 
-Integer Integer::operator%=(Integer const& a) // NIY
-{
+Integer Integer::operator%=(Integer const& a) { // NIY
     return *this;
 }
 
@@ -204,8 +180,7 @@ Integer Integer::operator%=(Integer const& a) // NIY
  * Long operators overload
  */
 
-Integer operator+(Integer const& a, Integer& b)
-{
+Integer operator+(Integer const& a, Integer& b) {
     Integer copy(a);
     copy += b;
     return copy;
@@ -216,8 +191,7 @@ Integer operator+(Integer const& a, Integer& b)
  * Stream operators overload
  */
 
-ostream& operator<<(ostream& stream, Integer const& integer)
-{
+ostream& operator<<(ostream& stream, Integer const& integer) {
     integer.printTo(stream);
     return stream;
 }
