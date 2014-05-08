@@ -26,9 +26,13 @@ private:
     // Setters
     Integer& normalize(Integer const&);
     Integer& trim();
+	void setNumbers(std::vector<Digit>);
+
 public:
+	Integer multiplySingleDigit(Digit const&, Digit const&); // DEBUG
     // Constructors
     Integer();
+	Integer(Digit const);
     Integer(Integer const&);
     Integer(std::string);
     
@@ -36,7 +40,7 @@ public:
     int getSize() const;
     std::vector<Digit>::const_iterator getBegin() const;
     Digit getNumber(int) const;
-    
+
     // Methods
     void printTo(std::ostream&) const;
     bool isEqualTo(Integer const&) const;
@@ -45,7 +49,7 @@ public:
     // Short operators overload
     Integer operator+=(Integer &);
     Integer operator-=(Integer &);
-    Integer operator*=(Integer const&); // NIY
+    Integer operator*=(Integer &); // NIY
     Integer operator/=(Integer const&); // NIY
     Integer operator%=(Integer const&); // NIY
 	Integer operator++(); // Pre-fixed increment (++x)
@@ -57,7 +61,7 @@ public:
 // Long operators overload
 Integer operator+(Integer const&, Integer &);
 Integer operator-(Integer const&, Integer &);
-Integer operator*(Integer const&, Integer const&);
+Integer operator*(Integer const&, Integer &);
 
 // Relational operators overload
 bool operator==(Integer const&, Integer const&);

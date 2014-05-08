@@ -21,6 +21,11 @@ Integer::Integer() {
     numbers.push_back(ZERO);
 }
 
+// Digit constructor
+Integer::Integer(Digit const source) {
+	numbers.push_back(source);
+}
+
 // Copy constructor
 Integer::Integer(Integer const& source) {
     int i;
@@ -102,16 +107,38 @@ Integer& Integer::normalize(const Integer& a) {
     if(getSize() < a.getSize()) {
         while (getSize() < a.getSize()) {
             numbers.insert(numbers.begin(), ZERO);
+			numbers[0].resetOverflow();
         }
     }
     return *this;
 }
 
 Integer& Integer::trim() {
-    while(numbers[0].getValue() == ZERO) {
+    while(numbers[0].getValue() == ZERO && getSize() > 1) {
         numbers.erase(numbers.begin());
     }
+	for(int i=getSize()-1 ; i>=0 ; i--) {
+		
+	}
     return *this;
+}
+
+void Integer::setNumbers(std::vector<Digit> newNumbers) {
+	numbers = newNumbers;
+}
+
+Integer Integer::multiplySingleDigit(Digit const& a, Digit const& b) {
+	Integer less(a);
+	Integer more(b);
+	Integer result("0");
+
+	if(b < a) {
+		swap(more, less);
+	}
+	while(less-- != (Integer) "0") {
+		result += more;
+	}
+	return result;
 }
 
 
@@ -168,6 +195,13 @@ bool Integer::isGreaterThan(Integer const& a) const {
 
 Integer Integer::operator+=(Integer& a) {
     int i,j;
+	if (a == (Integer) "0") {
+		return *this;
+	}
+	if (*this == (Integer) "0") {
+		*this = a;
+		return *this;
+	}
 
     // Normalizing both of the operands
     normalize(a);
@@ -201,8 +235,10 @@ Integer Integer::operator+=(Integer& a) {
 
 Integer Integer::operator-=(Integer& a) {
 	if(a>=*this) {
-		Integer toReturn("0");
-		*this = toReturn;
+		*this = (Integer) "0";
+		return *this;
+	}
+	if (a == (Integer) "0") {
 		return *this;
 	}
 	int i,j;
@@ -235,20 +271,41 @@ Integer Integer::operator-=(Integer& a) {
     return *this;
 }
 
-Integer Integer::operator*=(Integer const& a) {
-	// TODO Make this damn faster (maybe with Karatsuba algorithm?)
-    Integer copy(*this);
-	Integer count(a);
-	Integer ref("0");
-
-	if(a > *this) { // Slight optimization: Be sure to use the lowest operand as counter
-		*this = count;
-		swap(copy, count);
+Integer Integer::operator*=(Integer& a) {
+	if(*this == (Integer) "0" || a == (Integer) "0") {
+		return (Integer) "0";
+	}
+	if(*this == (Integer) "1") {
+		*this = a;
+		return *this;
+	}
+	if(a == (Integer) "1") {
+		return *this;
 	}
 
-	while (--count != ref) {
-		*this += copy;
+	Integer result("0");
+	Integer toAdd;
+
+	// Normalizing
+	normalize(a);
+	a.normalize(*this);
+
+	// Naive algorithm
+	for(int i=getSize()-1 ; i>=0 ; i--) { // For each *this digit
+		for(int j=getSize()-1 ; j>=0 ; j--) { // For each a digit
+			Integer toAdd("0");
+			toAdd = multiplySingleDigit(numbers[i], a.numbers[j]);
+			for (int power=0; power < (getSize()-(i+1))+(a.getSize()-(j+1)); power++) { // Adding zeros according to current digits power
+				toAdd.numbers.push_back(ZERO);
+				toAdd.getNumber(toAdd.getSize()-1).resetOverflow();
+			}
+			toAdd.trim();
+			result += toAdd;
+		}
 	}
+	*this = result;
+	trim();
+	a.trim();
 	return *this;
 }
 
@@ -301,7 +358,7 @@ Integer operator-(Integer const& a, Integer& b) {
     return copy;
 }
 
-Integer operator*(Integer const& a, Integer const& b) {
+Integer operator*(Integer const& a, Integer& b) {
     Integer copy(a);
     copy *= b;
     return copy;
