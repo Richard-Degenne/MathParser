@@ -123,10 +123,6 @@ Integer& Integer::trim() {
     return *this;
 }
 
-void Integer::setNumbers(std::vector<Digit> newNumbers) {
-	numbers = newNumbers;
-}
-
 Integer Integer::multiplySingleDigit(Digit const& a, Digit const& b) {
 	Integer less(a);
 	Integer more(b);
@@ -193,7 +189,7 @@ bool Integer::isGreaterThan(Integer const& a) const {
  * Short operators overload
  */
 
-Integer Integer::operator+=(Integer& a) {
+Integer& Integer::operator+=(Integer const& a) {
     int i,j;
 	if (a == (Integer) "0") {
 		return *this;
@@ -203,13 +199,14 @@ Integer Integer::operator+=(Integer& a) {
 		return *this;
 	}
 
+	Integer copy(a);
     // Normalizing both of the operands
     normalize(a);
-    a.normalize(*this);
+    copy.normalize(*this);
 
     // Foreach digit, starting from units
     for(i=getSize()-1 ; i>=0 ; i--) {
-        numbers[i]+=a.numbers[i];
+        numbers[i]+=copy.numbers[i];
 
 		// Propagating overflow
 		j = i;
@@ -229,11 +226,10 @@ Integer Integer::operator+=(Integer& a) {
 
     // Trimming
     trim();
-    a.trim();
     return *this;
 }
 
-Integer Integer::operator-=(Integer& a) {
+Integer& Integer::operator-=(Integer const& a) {
 	if(a>=*this) {
 		*this = (Integer) "0";
 		return *this;
@@ -243,13 +239,14 @@ Integer Integer::operator-=(Integer& a) {
 	}
 	int i,j;
 
+	Integer copy(a);
 	// Normalizing both the operands
 	normalize(a);
-	a.normalize(*this);
+	copy.normalize(*this);
 
     // Foreach digit, starting from units
     for(i=getSize()-1 ; i>=0 ; i--) {
-        numbers[i]-=a.numbers[i];
+        numbers[i]-=copy.numbers[i];
 
 		// Propagating overflow
 		j = i;
@@ -267,13 +264,13 @@ Integer Integer::operator-=(Integer& a) {
 	
     // Trimming
     trim();
-    a.trim();
     return *this;
 }
 
-Integer Integer::operator*=(Integer& a) {
+Integer& Integer::operator*=(Integer const& a) {
 	if(*this == (Integer) "0" || a == (Integer) "0") {
-		return (Integer) "0";
+		*this = (Integer) "0";
+		return *this;
 	}
 	if(*this == (Integer) "1") {
 		*this = a;
@@ -283,19 +280,20 @@ Integer Integer::operator*=(Integer& a) {
 		return *this;
 	}
 
+	Integer copy(a);
 	Integer result("0");
 	Integer toAdd;
 
 	// Normalizing
 	normalize(a);
-	a.normalize(*this);
+	copy.normalize(*this);
 
 	// Naive algorithm
 	for(int i=getSize()-1 ; i>=0 ; i--) { // For each *this digit
 		for(int j=getSize()-1 ; j>=0 ; j--) { // For each a digit
 			Integer toAdd("0");
-			toAdd = multiplySingleDigit(numbers[i], a.numbers[j]);
-			for (int power=0; power < (getSize()-(i+1))+(a.getSize()-(j+1)); power++) { // Adding zeros according to current digits power
+			toAdd = multiplySingleDigit(numbers[i], copy.numbers[j]);
+			for (int power=0; power < (getSize()-(i+1))+(copy.getSize()-(j+1)); power++) { // Adding zeros according to current digits power
 				toAdd.numbers.push_back(ZERO);
 				toAdd.getNumber(toAdd.getSize()-1).resetOverflow();
 			}
@@ -305,19 +303,18 @@ Integer Integer::operator*=(Integer& a) {
 	}
 	*this = result;
 	trim();
-	a.trim();
 	return *this;
 }
 
-Integer Integer::operator/=(Integer const& a) { // NIY
+Integer& Integer::operator/=(Integer const& a) { // NIY
     return *this;
 }
 
-Integer Integer::operator%=(Integer const& a) { // NIY
+Integer& Integer::operator%=(Integer const& a) { // NIY
     return *this;
 }
 
-Integer Integer::operator++() {
+Integer& Integer::operator++() {
 	Integer inc("1");
 	*this += inc;
 	return *this;
@@ -329,7 +326,7 @@ Integer Integer::operator++(int dummy) {
 	return copy;
 }
 
-Integer Integer::operator--() {
+Integer& Integer::operator--() {
 	Integer inc("1");
 	*this -= inc;
 	return *this;
@@ -346,19 +343,19 @@ Integer Integer::operator--(int dummy) {
  * Long operators overload
  */
 
-Integer operator+(Integer const& a, Integer& b) {
+Integer operator+(Integer const& a, Integer const& b) {
     Integer copy(a);
     copy += b;
     return copy;
 }
 
-Integer operator-(Integer const& a, Integer& b) {
+Integer operator-(Integer const& a, Integer const& b) {
     Integer copy(a);
     copy -= b;
     return copy;
 }
 
-Integer operator*(Integer const& a, Integer& b) {
+Integer operator*(Integer const& a, Integer const& b) {
     Integer copy(a);
     copy *= b;
     return copy;

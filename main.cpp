@@ -16,8 +16,8 @@ using namespace std;
 
 int main(int argc, const char* argv[])
 {
-	Integer a("123456789"), c("987654321");
+	Integer a("2"), b("3"), c("4");
 
-	cout << a*c << endl;
+	cout << c*(a+b) << endl;
 	return EXIT_SUCCESS;
 }

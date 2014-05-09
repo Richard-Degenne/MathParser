@@ -26,10 +26,9 @@ private:
     // Setters
     Integer& normalize(Integer const&);
     Integer& trim();
-	void setNumbers(std::vector<Digit>);
+	Integer multiplySingleDigit(Digit const&, Digit const&);
 
 public:
-	Integer multiplySingleDigit(Digit const&, Digit const&); // DEBUG
     // Constructors
     Integer();
 	Integer(Digit const);
@@ -47,21 +46,21 @@ public:
     bool isGreaterThan(Integer const&) const;
     
     // Short operators overload
-    Integer operator+=(Integer &);
-    Integer operator-=(Integer &);
-    Integer operator*=(Integer &); // NIY
-    Integer operator/=(Integer const&); // NIY
-    Integer operator%=(Integer const&); // NIY
-	Integer operator++(); // Pre-fixed increment (++x)
+    Integer& operator+=(Integer const&);
+    Integer& operator-=(Integer const&);
+    Integer& operator*=(Integer const&);
+    Integer& operator/=(Integer const&); // NIY
+    Integer& operator%=(Integer const&); // NIY
+	Integer& operator++(); // Pre-fixed increment (++x)
 	Integer operator++(int); // Post-fixed increment (x++)
-	Integer operator--(); // Pre-fixed increment (++x)
-	Integer operator--(int); // Post-fixed increment (x++)
+	Integer& operator--(); // Pre-fixed decrement (--x)
+	Integer operator--(int); // Post-fixed decrement (x--)
 };
 
 // Long operators overload
-Integer operator+(Integer const&, Integer &);
-Integer operator-(Integer const&, Integer &);
-Integer operator*(Integer const&, Integer &);
+Integer operator+(Integer const&, Integer const&);
+Integer operator-(Integer const&, Integer const&);
+Integer operator*(Integer const&, Integer const&);
 
 // Relational operators overload
 bool operator==(Integer const&, Integer const&);
