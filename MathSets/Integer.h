@@ -37,7 +37,6 @@ public:
     
     // Getters
     int getSize() const;
-    std::vector<Digit>::const_iterator getBegin() const;
     Digit getNumber(int) const;
 
     // Methods

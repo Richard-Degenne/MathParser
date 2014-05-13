@@ -28,21 +28,17 @@ Integer::Integer(Digit const source) {
 
 // Copy constructor
 Integer::Integer(Integer const& source) {
-    int i;
-    
-    for(i=0 ; i<source.getSize() ; i++) {
-        numbers.push_back(source.getNumber(i));
+    for(vector<Digit>::const_iterator i = source.numbers.begin() ; i!=source.numbers.end() ; i++) {
+        numbers.push_back(*i);
     }
 }
 
 // Most evolved constructor: String parsing
 Integer::Integer(string const source) {
-    int i;
-    
-    for (i=0 ; i<source.size() ; i++) {
-        if (isdigit(source[i])) {
+    for (string::const_iterator i=source.begin() ; i!=source.end() ; i++) {
+        if (isdigit(*i)) {
             Digit toPush;
-            switch (source[i]) {
+            switch (*i) {
                 case '0':
                     toPush = ZERO;
                     break;
@@ -79,6 +75,7 @@ Integer::Integer(string const source) {
             numbers.push_back(toPush);
         }
     }
+	trim();
 }
 
 
@@ -88,10 +85,6 @@ Integer::Integer(string const source) {
 
 int Integer::getSize() const {
     return (int) numbers.size();
-}
-
-vector<Digit>::const_iterator Integer::getBegin() const {
-    return numbers.begin();
 }
 
 Digit Integer::getNumber(int position) const {
@@ -114,12 +107,9 @@ Integer& Integer::normalize(const Integer& a) {
 }
 
 Integer& Integer::trim() {
-    while(numbers[0].getValue() == ZERO && getSize() > 1) {
+    while(numbers.begin()->getValue() == ZERO && getSize() > 1) {
         numbers.erase(numbers.begin());
     }
-	for(int i=getSize()-1 ; i>=0 ; i--) {
-		
-	}
     return *this;
 }
 
@@ -143,19 +133,17 @@ Integer Integer::multiplySingleDigit(Digit const& a, Digit const& b) {
  */
 
 void Integer::printTo(ostream& stream) const {
-    int i;
-    
-    for (i=0 ; i<numbers.size() ; i++) {
-        stream << numbers[i];
+    for (vector<Digit>::const_iterator i=numbers.begin() ; i!=numbers.end() ; i++) {
+        stream << *i;
     }
 }
 
 bool Integer::isEqualTo(Integer const& a) const {
 	if(getSize() == a.getSize())
 	{
-		for(int i=0 ; i<getSize() ; i++)
+		for(vector<Digit>::const_iterator i=numbers.begin(), j=a.numbers.begin() ; i!=numbers.end() ; i++)
 		{
-			if(getNumber(i) != a.getNumber(i)) {
+			if(*i != *j) {
 				return false;
 			}
 		}
@@ -189,8 +177,7 @@ bool Integer::isGreaterThan(Integer const& a) const {
  * Short operators overload
  */
 
-Integer& Integer::operator+=(Integer const& a) {
-    int i,j;
+Integer& Integer::operator+=(Integer const& a) { // TODO Think about how this could look like with an iterator mecanism
 	if (a == (Integer) "0") {
 		return *this;
 	}
@@ -200,28 +187,30 @@ Integer& Integer::operator+=(Integer const& a) {
 	}
 
 	Integer copy(a);
-    // Normalizing both of the operands
-    normalize(a);
-    copy.normalize(*this);
 
     // Foreach digit, starting from units
-    for(i=getSize()-1 ; i>=0 ; i--) {
-        numbers[i]+=copy.numbers[i];
+    vector<Digit>::reverse_iterator i = numbers.rbegin() ;
+	vector<Digit>::reverse_iterator j = copy.numbers.rbegin();
+
+	while(i != numbers.rend() && j != copy.numbers.rend()) {
+		*i += *j;
 
 		// Propagating overflow
-		j = i;
-        while(numbers[j].getOverflow()) {
-			if(j > 0) {
-				numbers[j-1]++;
-				numbers[j].resetOverflow();
-				j--;
+		vector<Digit>::reverse_iterator toOverflow = numbers.rbegin() + distance(numbers.rbegin(),i);
+        while(toOverflow != numbers.rend() && toOverflow->getOverflow()) {
+			if(toOverflow != numbers.rend()-1) {
+				++(*(next(toOverflow)));
+				toOverflow->resetOverflow();
+				toOverflow++;
 			}
 			else {
 				numbers.insert(numbers.begin(), ONE);
-				numbers[0].resetOverflow();
-				numbers[j+1].resetOverflow();
+				numbers.begin()->resetOverflow();
+				prev(toOverflow)->resetOverflow();
 			}
         }
+		i++;
+		j++;
     }
 
     // Trimming
