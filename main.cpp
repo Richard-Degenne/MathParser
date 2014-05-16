@@ -9,15 +9,15 @@
  */
 
 #include <iostream>
-#include "Integer.h"
+#include "Natural.h"
 #include "Digit.h"
 
 using namespace std;
 
 int main(int argc, const char* argv[])
 {
-	Integer a("2431"), b("3");
-
-	cout << endl << a+b << endl;
+	Natural	a("22435");
+	Natural b("54321");
+	cout << a*b << endl;
 	return EXIT_SUCCESS;
 }
