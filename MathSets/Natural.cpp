@@ -205,7 +205,7 @@ Natural& Natural::operator+=(Natural const& a) {
 			}
 			else {
 				numbers.insert(numbers.begin(), ONE);
-				prev(toOverflow)->resetOverflow();
+				toOverflow->resetOverflow();
 			}
         }
 		i++;
@@ -270,10 +270,6 @@ Natural& Natural::operator*=(Natural const& a) {
 	Natural copy(a);
 	Natural result("0");
 
-	// Normalizing
-	normalize(a);
-	copy.normalize(*this);
-
 	// Naive algorithm
 	for(vector<Digit>::reverse_iterator i = numbers.rbegin() ; i!=numbers.rend() ; i++) { // For each *this digit
 		for(vector<Digit>::const_reverse_iterator j = a.numbers.rbegin(); j!=a.numbers.rend() ; j++) { // For each a digit
@@ -281,10 +277,8 @@ Natural& Natural::operator*=(Natural const& a) {
 			// Adding zeros
 			for (int power=0 ; power < distance(numbers.rbegin(),i)+distance(a.numbers.rbegin(),j) ; power++) {
 				toAdd.numbers.push_back(ZERO);
-				(toAdd.numbers.rend()-1)->resetOverflow();
 			}
 			toAdd.trim();
-			cout << "Adding " << toAdd << " to " << result << endl;
 			result += toAdd;
 		}
 	}
