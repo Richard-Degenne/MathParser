@@ -27,10 +27,10 @@ int main(int argc, const char* argv[])
 	cout << endl << "===== MULTIPLICATION =====" << endl << endl;
 
 	cout << "\t=== With Natural ===" << endl;
-	cout << (Natural) "12345678901234" * (Natural) "98765432109876" << endl;
+	cout << Natural{"12345678901234"} * Natural{"98765432109876"} << endl;
 
 	cout << "\t=== With unsigned long int ===" << endl;
-	cout  << (unsigned long)12345678901234 * 98765432109876 << endl << endl;
+	cout  << (unsigned long){12345678901234} * 98765432109876 << endl << endl;
 
 	/*
 	 * Of course, we can do the same thing with additions. Look at this:
@@ -39,10 +39,10 @@ int main(int argc, const char* argv[])
 	cout << endl << "===== ADDITION =====" << endl << endl;
 
 	cout << "\t=== With Natural ===" << endl;
-	cout << (Natural) "18446744073709551615" + (Natural) "1" << endl;
+	cout << Natural{"18446744073709551615"} + Natural{"1"} << endl;
 
 	cout << "\t=== With unsigned long int ===" << endl;
-	cout << (unsigned long)(LONG_LONG_MAX+1) * 2  << endl;
+	cout << ((unsigned long){LONG_LONG_MAX}+1) * 2  << endl;
 
 	/*
 	 * However, since the Natural class doesn't handle negative numbers, we can't see how it outclasses standard numeric types with subtractions.

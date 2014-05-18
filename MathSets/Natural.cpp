@@ -27,17 +27,15 @@ Natural::Natural(Digit const source) {
 }
 
 // Copy constructor
-Natural::Natural(Natural const& source) {
-    for(vector<Digit>::const_iterator i = source.numbers.begin() ; i!=source.numbers.end() ; i++) {
-        numbers.push_back(*i);
-    }
+Natural::Natural(Natural const& source) : numbers(source.numbers) {
+
 }
 
 // Most evolved constructor: String parsing
-Natural::Natural(string const source) {
-    for (string::const_iterator i=source.begin() ; i!=source.end() ; i++) {
+Natural::Natural(string const& source) {
+    for (string::const_iterator i {source.begin()} ; i!=source.end() ; i++) {
         if (isdigit(*i)) {
-            Digit toPush;
+            Digit toPush{};
             switch (*i) {
                 case '0':
                     toPush = ZERO;
@@ -83,40 +81,30 @@ Natural::Natural(string const source) {
  * Setters
  */
 
-Natural& Natural::normalize(const Natural& a) {
-    if(numbers.size() < a.numbers.size()) {
-        while (numbers.size() < a.numbers.size()) {
-            numbers.insert(numbers.begin(), ZERO);
-			numbers[0].resetOverflow();
-        }
-    }
-    return *this;
-}
-
 Natural& Natural::trim() {
 	clearOverflows();
-	while(numbers.begin()->getValue() == ZERO && numbers.size() > 1) {
+	while(*(numbers.begin()) == ZERO && numbers.size() > 1) {
         numbers.erase(numbers.begin());
     }
     return *this;
 }
 
 Natural& Natural::clearOverflows() {
-	for(vector<Digit>::iterator i=numbers.begin() ; i != numbers.end() ; i++) {
+	for(vector<Digit>::iterator i {numbers.begin()} ; i != numbers.end() ; i++) {
 		i->resetOverflow();
 	}
 	return *this;
 }
 
 Natural Natural::multiplySingleDigit(Digit const& a, Digit const& b) {
-	Natural less(a);
-	Natural more(b);
-	Natural result("0");
+	Natural less {a};
+	Natural more {b};
+	Natural result {"0"};
 
 	if(b < a) {
 		swap(more, less);
 	}
-	while(less-- != (Natural) "0") {
+	while(less-- != Natural {"0"}) {
 		result += more;
 	}
 	return result;
@@ -128,7 +116,7 @@ Natural Natural::multiplySingleDigit(Digit const& a, Digit const& b) {
  */
 
 void Natural::printTo(ostream& stream) const {
-    for (vector<Digit>::const_iterator i=numbers.begin() ; i!=numbers.end() ; i++) {
+    for (vector<Digit>::const_iterator i {numbers.begin()} ; i!=numbers.end() ; i++) {
         stream << *i;
     }
 }
@@ -136,7 +124,7 @@ void Natural::printTo(ostream& stream) const {
 bool Natural::isEqualTo(Natural const& a) const {
 	if(numbers.size() == a.numbers.size())
 	{
-		for(vector<Digit>::const_iterator i=numbers.begin(), j=a.numbers.begin() ; i!=numbers.end() ; i++)
+		for(vector<Digit>::const_iterator i {numbers.begin()}, j {a.numbers.begin()} ; i!=numbers.end() ; i++)
 		{
 			if(*i != *j) {
 				return false;
@@ -155,7 +143,7 @@ bool Natural::isGreaterThan(Natural const& a) const {
 		return false;
 	}
 	else {
-		for(int i=0; i<numbers.size(); i++) {
+		for(int i{0}; i<numbers.size(); i++) {
 			if(numbers[i] > a.numbers[i]) {
 				return true;
 			}
@@ -173,24 +161,24 @@ bool Natural::isGreaterThan(Natural const& a) const {
  */
 
 Natural& Natural::operator+=(Natural const& a) {
-	if(a == (Natural) "0") {
+	if(a == Natural {"0"}) {
 		return *this;
 	}
-	if(*this == (Natural) "0") {
+	if(*this == Natural {"0"}) {
 		*this = a;
 		return *this;
 	}
 	if(this->numbers.size() < a.numbers.size()) {
-		Natural copy(a);
+		Natural copy {a};
 		copy += *this;
 		*this = copy;
 		return *this;
 	}
 
     // Foreach digit, starting from units
-    vector<Digit>::reverse_iterator i = numbers.rbegin() ;
-	vector<Digit>::const_reverse_iterator j = a.numbers.rbegin();
-	vector<Digit>::reverse_iterator toOverflow;
+    vector<Digit>::reverse_iterator i {numbers.rbegin()};
+	vector<Digit>::const_reverse_iterator j {a.numbers.rbegin()};
+	vector<Digit>::reverse_iterator toOverflow {};
 	while(j != a.numbers.rend()) {
 		// Checking *this lenght overflow
 		*i += *j;
@@ -219,17 +207,17 @@ Natural& Natural::operator+=(Natural const& a) {
 
 Natural& Natural::operator-=(Natural const& a) {
 	if(a>=*this) {
-		*this = (Natural) "0";
+		*this = Natural {"0"};
 		return *this;
 	}
-	if (a == (Natural) "0") {
+	if (a == Natural {"0"}) {
 		return *this;
 	}
 
     // Foreach digit, starting from units
-	vector<Digit>::reverse_iterator i = numbers.rbegin();
-	vector<Digit>::const_reverse_iterator j = a.numbers.rbegin();
-	vector<Digit>::reverse_iterator toOverflow;
+	vector<Digit>::reverse_iterator i {numbers.rbegin()};
+	vector<Digit>::const_reverse_iterator j {a.numbers.rbegin()};
+	vector<Digit>::reverse_iterator toOverflow {};
  	while(i != numbers.rend() && j != a.numbers.rend()) {
 		*i-=*j;
 
@@ -255,27 +243,28 @@ Natural& Natural::operator-=(Natural const& a) {
 }
 
 Natural& Natural::operator*=(Natural const& a) {
-	if(*this == (Natural) "0" || a == (Natural) "0") {
-		*this = (Natural) "0";
+	if(*this == Natural {"0"} || a == Natural {"0"}) {
+		*this = Natural {"0"};
 		return *this;
 	}
-	if(*this == (Natural) "1") {
+	if(*this == Natural {"1"}) {
 		*this = a;
 		return *this;
 	}
-	if(a == (Natural) "1") {
+	if(a == Natural {"1"}) {
 		return *this;
 	}
 
-	Natural copy(a);
-	Natural result("0");
+	Natural copy {a};
+	Natural result {"0"};
+    Natural toAdd {};
 
 	// Naive algorithm
-	for(vector<Digit>::reverse_iterator i = numbers.rbegin() ; i!=numbers.rend() ; i++) { // For each *this digit
-		for(vector<Digit>::const_reverse_iterator j = a.numbers.rbegin(); j!=a.numbers.rend() ; j++) { // For each a digit
-			Natural toAdd = multiplySingleDigit(*i, *j);
+	for(vector<Digit>::reverse_iterator i {numbers.rbegin()} ; i!=numbers.rend() ; i++) { // For each *this digit
+		for(vector<Digit>::const_reverse_iterator j {a.numbers.rbegin()}; j!=a.numbers.rend() ; j++) { // For each a digit
+			toAdd = multiplySingleDigit(*i, *j);
 			// Adding zeros
-			for (int power=0 ; power < distance(numbers.rbegin(),i)+distance(a.numbers.rbegin(),j) ; power++) {
+			for (int power {0} ; power < distance(numbers.rbegin(),i)+distance(a.numbers.rbegin(),j) ; power++) {
 				toAdd.numbers.push_back(ZERO);
 			}
 			toAdd.trim();
@@ -296,20 +285,18 @@ Natural& Natural::operator%=(Natural const& a) { // NIY
 }
 
 Natural& Natural::operator++() {
-	Natural inc("1");
-	*this += inc;
+	*this += Natural {"1"};
 	return *this;
 }
 
 Natural Natural::operator++(int dummy) {
-	Natural copy(*this);
+	Natural copy {*this};
 	++(*this);
 	return copy;
 }
 
 Natural& Natural::operator--() {
-	Natural inc("1");
-	*this -= inc;
+	*this -= Natural {"1"};
 	return *this;
 }
 
@@ -325,19 +312,19 @@ Natural Natural::operator--(int dummy) {
  */
 
 Natural operator+(Natural const& a, Natural const& b) {
-    Natural copy(a);
+    Natural copy {a};
     copy += b;
     return copy;
 }
 
 Natural operator-(Natural const& a, Natural const& b) {
-    Natural copy(a);
+    Natural copy {a};
     copy -= b;
     return copy;
 }
 
 Natural operator*(Natural const& a, Natural const& b) {
-    Natural copy(a);
+    Natural copy {a};
     copy *= b;
     return copy;
 }

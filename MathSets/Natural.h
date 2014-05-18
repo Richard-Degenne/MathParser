@@ -24,22 +24,21 @@ private:
     std::vector<Digit> numbers;
 
     // Setters
-    Natural& normalize(Natural const&);
     Natural& trim();
 	Natural& clearOverflows();
 	Natural multiplySingleDigit(Digit const&, Digit const&);
+
+    // Methods
+    void printTo(std::ostream&) const;
+    bool isEqualTo(Natural const&) const;
+    bool isGreaterThan(Natural const&) const;
 
 public:
     // Constructors
     Natural();
 	Natural(Digit const);
     Natural(Natural const&);
-    Natural(std::string);
-
-    // Methods
-    void printTo(std::ostream&) const;
-    bool isEqualTo(Natural const&) const;
-    bool isGreaterThan(Natural const&) const;
+    Natural(std::string const&);
     
     // Short operators overload
     Natural& operator+=(Natural const&);
@@ -51,22 +50,22 @@ public:
 	Natural operator++(int); // Post-fixed increment (x++)
 	Natural& operator--(); // Pre-fixed decrement (--x)
 	Natural operator--(int); // Post-fixed decrement (x--)
+
+	// Relational operators overload
+	friend bool operator==(Natural const&, Natural const&);
+	friend bool operator!=(Natural const&, Natural const&);
+	friend bool operator> (Natural const&, Natural const&);
+	friend bool operator>=(Natural const&, Natural const&);
+	friend bool operator< (Natural const&, Natural const&);
+	friend bool operator<=(Natural const&, Natural const&);
+
+	// Stream operators overload
+	friend std::ostream& operator<<(std::ostream&, Natural const&);
 };
 
 // Long operators overload
 Natural operator+(Natural const&, Natural const&);
 Natural operator-(Natural const&, Natural const&);
 Natural operator*(Natural const&, Natural const&);
-
-// Relational operators overload
-bool operator==(Natural const&, Natural const&);
-bool operator!=(Natural const&, Natural const&);
-bool operator> (Natural const&, Natural const&);
-bool operator>=(Natural const&, Natural const&);
-bool operator< (Natural const&, Natural const&);
-bool operator<=(Natural const&, Natural const&);
-
-// Stream operators overload
-std::ostream& operator<<(std::ostream&, Natural const&);
 
 #endif

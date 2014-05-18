@@ -18,23 +18,21 @@ using namespace std;
  */
 
 // Base constructor
-Digit::Digit() : overflow(ZERO) {
+Digit::Digit() : overflow(false) {
     
 }
 
 // Initialization constructor
 Digit::Digit(digit const source) : value(source) {
-    Digit();
+
 }
 
 // Copy constructor
-Digit::Digit(Digit const& source) {
-	value = source.getValue();
-	overflow = source.getOverflow();
+Digit::Digit(Digit const& source) : value(source.value), overflow(source.overflow) {
+
 }
 
-Digit::Digit(int const source) {
-    Digit();
+Digit::Digit(int const source) : overflow(false){
 	switch (source) {
 		case 0:
 			value = ZERO;
@@ -78,10 +76,6 @@ Digit::Digit(int const source) {
  * Getters
  */
 
-digit Digit::getValue() const {
-    return value;
-}
-
 bool Digit::getOverflow() const {
     return overflow;
 }
@@ -91,78 +85,43 @@ bool Digit::getOverflow() const {
  * Setters
  */
 
-void Digit::setValue(digit newValue) {
-    switch (newValue) {
-        case 0:
-            value = ZERO;
-            break;
-        case 1:
-            value = ONE;
-            break;
-        case 2:
-            value = TWO;
-            break;
-        case 3:
-            value = THREE;
-            break;
-        case 4:
-            value = FOUR;
-            break;
-        case 5:
-            value = FIVE;
-            break;
-        case 6:
-            value = SIX;
-            break;
-        case 7:
-            value = SEVEN;
-            break;
-        case 8:
-            value = EIGHT;
-            break;
-        case 9:
-            value = NINE;
-            break;
-            
-        default:
-            value = ERROR;
-            break;
-    }
+void Digit::resetOverflow() {
+	overflow = false;
 }
 
 void Digit::incrementValue() {
-	switch (getValue())
+	switch (value)
 	{
 		case ZERO:
-			setValue(ONE);
+			value = ONE;
 			break;
 		case ONE:
-			setValue(TWO);
+			value = TWO;
 			break;
 		case TWO:
-			setValue(THREE);
+			value = THREE;
 			break;
 		case THREE:
-			setValue(FOUR);
+			value = FOUR;
 			break;
 		case FOUR:
-			setValue(FIVE);
+			value = FIVE;
 			break;
 		case FIVE:
-			setValue(SIX);
+			value = SIX;
 			break;
 		case SIX:
-			setValue(SEVEN);
+			value = SEVEN;
 			break;
 		case SEVEN:
-			setValue(EIGHT);
+			value = EIGHT;
 			break;
 		case EIGHT:
-			setValue(NINE);
+			value = NINE;
 			break;
 		case NINE:
-			setOverflow();
-			setValue(ZERO);
+			overflow = true;
+			value = ZERO;
 			break;
 		default:
 			break;
@@ -170,50 +129,42 @@ void Digit::incrementValue() {
 }
 
 void Digit::decrementValue() {
-	switch (getValue())
+	switch (value)
 	{
 		case ZERO:
-			setOverflow();
-			setValue(NINE);
+			overflow = true;
+			value = NINE;
 			break;
 		case ONE:
-			setValue(ZERO);
+			value = ZERO;
 			break;
 		case TWO:
-			setValue(ONE);
+			value = ONE;
 			break;
 		case THREE:
-			setValue(TWO);
+			value = TWO;
 			break;
 		case FOUR:
-			setValue(THREE);
+			value = THREE;
 			break;
 		case FIVE:
-			setValue(FOUR);
+			value = FOUR;
 			break;
 		case SIX:
-			setValue(FIVE);
+			value = FIVE;
 			break;
 		case SEVEN:
-			setValue(SIX);
+			value = SIX;
 			break;
 		case EIGHT:
-			setValue(SEVEN);
+			value = SEVEN;
 			break;
 		case NINE:
-			setValue(EIGHT);
+			value = EIGHT;
 			break;
 		default:
 			break;
 	}
-}
-
-void Digit::setOverflow() {
-	overflow = true;
-}
-
-void Digit::resetOverflow() {
-	overflow = false;
 }
 
 
@@ -226,11 +177,11 @@ void Digit::printTo(ostream& stream) const {
 }
 
 bool Digit::isEqualTo(Digit const& a) const {
-	return getValue() == a.getValue();
+	return value == a.value;
 }
 
 bool Digit::isGreaterThan(Digit const& a) const {
-	return getValue() > a.getValue();
+	return value > a.value;
 }
 
 
@@ -239,36 +190,29 @@ bool Digit::isGreaterThan(Digit const& a) const {
  */
 
 Digit Digit::operator=(Digit const& a) {
-	setValue(a.getValue());
+	value = a.value;
+	overflow = a.overflow;
 	return *this;
 }
 
 Digit Digit::operator+=(Digit const& a) {
-	int i;
-	
-	for(i=0 ; i<a.getValue() ; i++)
-	{
+	for(int i {0} ; i<a.value ; i++) {
 		incrementValue();
 	}
 	return *this;
 }
 
 Digit Digit::operator-=(Digit const& a) {
-	int i;
-	
-    for(i=0 ; i<a.getValue() ; i++)
-	{
+	for(int i {0} ; i<a.value ; i++) {
 		decrementValue();
 	}
 	return *this;
 }
 
 Digit Digit::operator*=(Digit const& a) {
-	int i;
-	Digit copy(*this);
-	for (i=0 ; i<a.getValue()-1; i++)
-	{
-		*this+=copy;
+	Digit copy {*this};
+	for (int i {0} ; i<a.value-1; i++) {
+		*this += copy;
 	}
     return *this;
 }
@@ -287,7 +231,7 @@ Digit Digit::operator++() {
 }
 
 Digit Digit::operator++(int dummy) {
-	Digit copy(*this);
+	Digit copy {*this};
 	++(*this);
 	return copy;
 }
@@ -298,7 +242,7 @@ Digit Digit::operator--() {
 }
 
 Digit Digit::operator--(int dummy) {
-	Digit copy(*this);
+	Digit copy {*this};
 	--(*this);
 	return copy;
 }
@@ -309,19 +253,19 @@ Digit Digit::operator--(int dummy) {
  */
 
 Digit operator+(Digit const& a, Digit const& b) {
-	Digit copy(a);
+	Digit copy {a};
 	copy += b;
 	return copy;
 }
 
 Digit operator-(Digit const& a, Digit const& b) {
-	Digit copy(a);
+	Digit copy {a};
 	copy -= b;
 	return copy;
 }
 
 Digit operator*(Digit const& a, Digit const& b) {
-	Digit copy(a);
+	Digit copy {a};
 	copy *= b;
 	return copy;
 }

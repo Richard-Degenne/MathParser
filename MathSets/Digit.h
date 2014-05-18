@@ -38,7 +38,7 @@ enum digit {
 /*
  * Digit class
  *
- * A digit is characterized by a digital value and a digital overflow. (e.g. NINE*SIX = overflow: FOUR / value: TWO)
+ * A digit is characterized by a digital value and a boolean overflow.
  * It overloads common operators to interact as easily as possible with the other classes.
  */
 
@@ -48,9 +48,13 @@ private:
     bool overflow;
     
     // Setters
-    void setOverflow();
     void incrementValue();
     void decrementValue();
+
+    // Methods
+    void printTo(std::ostream&) const;
+    bool isEqualTo(Digit const&) const;
+    bool isGreaterThan(Digit const&) const;
     
 public:
     // Constructors
@@ -60,17 +64,10 @@ public:
     Digit(int const);
     
     // Getters
-    digit getValue() const;
     bool getOverflow() const;
     
     // Setters
-    void setValue(digit);
     void resetOverflow();
-    
-    // Methods
-    void printTo(std::ostream&) const;
-    bool isEqualTo(Digit const&) const;
-    bool isGreaterThan(Digit const&) const;
     
     // Short operators overload
     Digit operator= (Digit const&);
@@ -83,6 +80,17 @@ public:
 	Digit operator++(int); // Post-fixed increment (x++)
 	Digit operator--(); // Pre-fixed increment (++x)
 	Digit operator--(int); // Post-fixed increment (x++)
+
+	// Relational operators overload
+	friend bool operator==(Digit const&, Digit const&);
+	friend bool operator!=(Digit const&, Digit const&);
+	friend bool operator> (Digit const&, Digit const&);
+	friend bool operator>=(Digit const&, Digit const&);
+	friend bool operator< (Digit const&, Digit const&);
+	friend bool operator<=(Digit const&, Digit const&);
+
+	// Stream operators overload
+	friend std::ostream& operator<<(std::ostream&, Digit);
 };
 
 // Long operators overload
@@ -91,16 +99,5 @@ Digit operator-(Digit const&, Digit const&);
 Digit operator*(Digit const&, Digit const&);
 Digit operator/(Digit const&, Digit const&); // NIY
 Digit operator%(Digit const&, Digit const&); // NIY
-
-// Relational operators overload
-bool operator==(Digit const&, Digit const&);
-bool operator!=(Digit const&, Digit const&);
-bool operator> (Digit const&, Digit const&);
-bool operator>=(Digit const&, Digit const&);
-bool operator< (Digit const&, Digit const&);
-bool operator<=(Digit const&, Digit const&);
-
-// Stream operators overload
-std::ostream& operator<<(std::ostream&, Digit);
 
 #endif
