@@ -13,6 +13,7 @@
 
 #include <iostream>
 #include <vector>
+#include <stdexcept>
 #include "Digit.h"
 
 class Natural {
@@ -44,8 +45,8 @@ public:
     Natural& operator+=(Natural const&);
     Natural& operator-=(Natural const&);
     Natural& operator*=(Natural const&);
-    Natural& operator/=(Natural const&); // NIY
-    Natural& operator%=(Natural const&); // NIY
+    Natural& operator/=(Natural const&);
+    Natural& operator%=(Natural const&);
 	Natural& operator++(); // Pre-fixed increment (++x)
 	Natural operator++(int); // Post-fixed increment (x++)
 	Natural& operator--(); // Pre-fixed decrement (--x)
@@ -67,5 +68,7 @@ public:
 Natural operator+(Natural const&, Natural const&);
 Natural operator-(Natural const&, Natural const&);
 Natural operator*(Natural const&, Natural const&);
+Natural operator/(Natural const&, Natural const&);
+Natural operator%(Natural const&, Natural const&);
 
 #endif

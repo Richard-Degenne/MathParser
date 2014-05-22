@@ -18,7 +18,7 @@ using namespace std;
 
 // Base constructor
 Natural::Natural() {
-    numbers.push_back(ZERO);
+
 }
 
 // Digit constructor
@@ -124,7 +124,7 @@ void Natural::printTo(ostream& stream) const {
 bool Natural::isEqualTo(Natural const& a) const {
 	if(numbers.size() == a.numbers.size())
 	{
-		for(vector<Digit>::const_iterator i {numbers.begin()}, j {a.numbers.begin()} ; i!=numbers.end() ; i++)
+		for(vector<Digit>::const_iterator i {numbers.begin()}, j {a.numbers.begin()} ; i!=numbers.end() ; i++,j++)
 		{
 			if(*i != *j) {
 				return false;
@@ -276,11 +276,47 @@ Natural& Natural::operator*=(Natural const& a) {
 	return *this;
 }
 
-Natural& Natural::operator/=(Natural const& a) { // NIY
-    return *this;
+Natural& Natural::operator/=(Natural const& a) {
+	if(a == Natural {"0"}) {
+		throw domain_error("std::domain_error: division by zero");
+	}
+	if(*this == a) {
+		*this = Natural {"1"};
+		return *this;
+	}
+	if(*this < a) {
+		*this = Natural {"0"};
+		return *this;
+	}
+	Natural result {};
+	Natural remainder {*(this->numbers.begin())};
+	vector<Digit>::const_iterator toPush {this->numbers.begin()+1};
+	Digit toAdd {};
+
+	// Naive algorithm
+	while(toPush != this->numbers.end()) {
+		// Bringing down as many digits as necessary/possible to continue
+		while(remainder < a && toPush != this->numbers.end()) {
+			remainder.numbers.push_back(*toPush);
+			toPush++;
+		}
+
+		// Calculating partial quotient
+		toAdd = Digit {ZERO};
+		while(remainder >= a) {
+			remainder -= a;
+			toAdd++;
+		}
+		result.numbers.push_back(toAdd);
+	}
+
+	*this = result;
+	trim();
+	return *this;
 }
 
-Natural& Natural::operator%=(Natural const& a) { // NIY
+Natural& Natural::operator%=(Natural const& a) {
+	*this -= a*(*this/a);
     return *this;
 }
 
@@ -326,6 +362,18 @@ Natural operator-(Natural const& a, Natural const& b) {
 Natural operator*(Natural const& a, Natural const& b) {
     Natural copy {a};
     copy *= b;
+    return copy;
+}
+
+Natural operator/(Natural const& a, Natural const& b) {
+    Natural copy {a};
+    copy /= b;
+    return copy;
+}
+
+Natural operator%(Natural const& a, Natural const& b) {
+    Natural copy {a};
+    copy %= b;
     return copy;
 }
 
