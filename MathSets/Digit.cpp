@@ -1,11 +1,11 @@
-/*
- * Digit.cpp
- * MathParser
+/**
+ * \file	Digit.cpp
+ * \brief	Digit source file
+ * \details This file implements all of the Digit features.
  *
- * CC by-nc-sa Richard Degenne
- * Created on 04/22/14
+ * \author Richard Degenne
+ * \date 04-22-2014
  *
- * Implementation of the Digit class, which describes the MathSets digit class.
  */
 
 #include "Digit.h"
@@ -17,56 +17,72 @@ using namespace std;
  * Constructors
  */
 
-// Base constructor
+/**
+ * \details	Instanciates a new %Digit object with a `false` overflow.
+ */
 Digit::Digit() : overflow(false) {
     
 }
 
-// Initialization constructor
+/**
+ * \details	Instanciates a new %Digit object with an initial value and a `false` overflow.
+ *
+ * \param	source	digit value to initialize the new object with.
+ */
 Digit::Digit(digit const source) : value(source) {
 
 }
 
-// Copy constructor
+/**
+ * \details Instanciates a new %Digit object from another one.
+ *
+ * \param	source	%Digit object to initialize the new objet with.
+ */
 Digit::Digit(Digit const& source) : value(source.value), overflow(source.overflow) {
 
 }
 
-Digit::Digit(int const source) : overflow(false){
+/**
+ * \details	Instanciates a new %Digit object from a numeric character
+ *
+ * \param	source	Character to parse
+ * \throws	std::range_error — Non-digit character
+ */
+Digit::Digit(char const source) : overflow(false){
 	switch (source) {
-		case 0:
+		case '0':
 			value = ZERO;
 			break;
-		case 1:
+		case '1':
 			value = ONE;
 			break;
-		case 2:
+		case '2':
 			value = TWO;
 			break;
-		case 3:
+		case '3':
 			value = THREE;
 			break;
-		case 4:
+		case '4':
 			value = FOUR;
 			break;
-		case 5:
+		case '5':
 			value = FIVE;
 			break;
-		case 6:
+		case '6':
 			value = SIX;
 			break;
-		case 7:
+		case '7':
 			value = SEVEN;
 			break;
-		case 8:
+		case '8':
 			value = EIGHT;
 			break;
-		case 9:
+		case '9':
 			value = NINE;
 			break;
 			
 		default:
-			value = ERROR;
+			throw range_error("std::range_error — Non-digit character");
 			break;
 	}
 }
@@ -189,27 +205,28 @@ bool Digit::isGreaterThan(Digit const& a) const {
  * Short operators overload
  */
 
-Digit Digit::operator=(Digit const& a) {
+
+Digit& Digit::operator=(Digit const& a) {
 	value = a.value;
 	overflow = a.overflow;
 	return *this;
 }
 
-Digit Digit::operator+=(Digit const& a) {
+Digit& Digit::operator+=(Digit const& a) {
 	for(int i {0} ; i<a.value ; i++) {
 		incrementValue();
 	}
 	return *this;
 }
 
-Digit Digit::operator-=(Digit const& a) {
+Digit& Digit::operator-=(Digit const& a) {
 	for(int i {0} ; i<a.value ; i++) {
 		decrementValue();
 	}
 	return *this;
 }
 
-Digit Digit::operator*=(Digit const& a) {
+Digit& Digit::operator*=(Digit const& a) {
 	Digit copy {*this};
 	for (int i {0} ; i<a.value-1; i++) {
 		*this += copy;
@@ -217,15 +234,36 @@ Digit Digit::operator*=(Digit const& a) {
     return *this;
 }
 
-Digit Digit::operator/=(Digit const& a) { // NIY
+/**
+ * \throws	std::domain_error — Division by zero
+ */
+Digit& Digit::operator/=(Digit const& a) {
+	if(a == ZERO) {
+		throw domain_error("std::domain_error — Division by zero");
+	}
+	Digit result {ZERO};
+	while(*this >= a) {
+		*this -= a;
+		result++;
+	}
+	*this = result;
+	return *this;
+}
+
+/**
+ * \throws	std::domain_error — Remainder by zero
+ */
+Digit& Digit::operator%=(Digit const& a) {
+	if(a == ZERO) {
+		throw domain_error("std::domain_error — Remainder by zero");
+	}
+	while(*this >= a) {
+		*this -= a;
+	}
     return *this;
 }
 
-Digit Digit::operator%=(Digit const& a) { // NIY
-    return *this;
-}
-
-Digit Digit::operator++() {
+Digit& Digit::operator++() {
 	incrementValue();
 	return *this;
 }
@@ -236,7 +274,7 @@ Digit Digit::operator++(int dummy) {
 	return copy;
 }
 
-Digit Digit::operator--() {
+Digit& Digit::operator--() {
 	decrementValue();
 	return *this;
 }
@@ -267,6 +305,18 @@ Digit operator-(Digit const& a, Digit const& b) {
 Digit operator*(Digit const& a, Digit const& b) {
 	Digit copy {a};
 	copy *= b;
+	return copy;
+}
+
+Digit operator/(Digit const& a, Digit const& b) {
+	Digit copy {a};
+	copy /= b;
+	return copy;
+}
+
+Digit operator%(Digit const& a, Digit const& b) {
+	Digit copy {a};
+	copy %= b;
 	return copy;
 }
 

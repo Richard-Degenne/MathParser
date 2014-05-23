@@ -2,6 +2,8 @@
  * \file	Natural.h
  * \brief	Natural header file
  *
+ * \see Digit
+ *
  * \author Richard Degenne
  * \date 04-21-2014
  *
@@ -22,8 +24,8 @@
 class Natural {
 	protected:
 		/**
-		 * Natural numbers array.
-		 * Index 0 will be for the highest power digit. (big-endian-like)
+		 * Natural numbers Digit array.
+		 * Index 0 will be for the highest power Digit. (big-endian-like)
 		 */
 		std::vector<Digit> numbers;
 
@@ -50,10 +52,10 @@ class Natural {
 		Natural& operator*=(Natural const&);
 		Natural& operator/=(Natural const&);
 		Natural& operator%=(Natural const&);
-		Natural& operator++(); //!< Pre-fixed increment (++x)
-		Natural operator++(int); //!< Post-fixed increment (x++)
-		Natural& operator--(); //!< Pre-fixed decrement (--x)
-		Natural operator--(int); //!< Post-fixed decrement (x--)
+		Natural& operator++(); //!< Pre-fixed increment
+		Natural operator++(int); //!< Post-fixed increment
+		Natural& operator--(); //!< Pre-fixed decrement
+		Natural operator--(int); //!< Post-fixed decrement
 
 		// Relational operators overload
 		friend bool operator==(Natural const&, Natural const&);

@@ -6,6 +6,7 @@
  * \author	Richard Degenne
  * \date	04-21-2014
  * \copyright	CC by-nc-sa
+ *
  */
 
 #include <iostream>

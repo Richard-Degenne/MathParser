@@ -2,10 +2,12 @@
  * \file	demo1.cpp
  * \brief	Test file n°1
  * \details	First tests: Natural addition and multiplication
+ * 
  * \see Natural
  *
  * \author	Richard Degenne
  * \date	05-22-2014
+ *
  */
 
 #include "examples.h"

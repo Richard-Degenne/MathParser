@@ -14,3 +14,8 @@ Contact
 =======
 
 For any remark, question or information about MathParser or its creator, feel free to contact Richard Degenne at richdeg2@gmail.com.
+
+License
+=======
+
+The MathParser source code is distributed under the terms of the CC by-nc-sa license.

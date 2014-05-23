@@ -5,6 +5,7 @@
  *
  * \author	Richard Degenne
  * \date	05-22-2014
+ *
  */
 
 #ifndef MathParser_examples_h

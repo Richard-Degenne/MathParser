@@ -1,11 +1,11 @@
-/*
- * Natural.cpp
- * MathParser
+/**
+ * \file	Natural.cpp
+ * \brief	Natural source file
+ * \details This file implements all of the Natural features.
  *
- * CC by-nc-sa Richard Degenne
- * Created on 04/22/14
+ * \author Richard Degenne
+ * \date 04-22-2014
  *
- * Implementation of the Natural class, which describes the MathSets natural integer class.
  */
 
 #include "Natural.h"
@@ -17,7 +17,7 @@ using namespace std;
  */
 
 /**
- * \details	Instanciates a new Natural object with an empty Natural#numbers.
+ * \details	Instanciates a new Natural object with an empty Natural::numbers.
  */
 Natural::Natural() {
 
@@ -44,8 +44,7 @@ Natural::Natural(Natural const& source) : numbers(source.numbers) {
  * Non-digit characters will be ignored.
  *
  * \param	source	%Digit to initialize the instance with.
- * 
- * \warning A `\0` character will interrupt the parsing. Escape it to avoid any problem.
+ * \throws	std::range_error — Non-digit character
  */
 Natural::Natural(string const& source) {
     for (string::const_iterator i {source.begin()} ; i!=source.end() ; i++) {
@@ -83,6 +82,7 @@ Natural::Natural(string const& source) {
                     toPush = NINE;
                     break;
                 default:
+					throw range_error("std::range_error — Non-digit character");
                     break;
             }
             numbers.push_back(toPush);
@@ -333,7 +333,13 @@ Natural& Natural::operator/=(Natural const& a) {
 	return *this;
 }
 
+/**
+ * \throws std::domain_error — Remainder by zero
+ */
 Natural& Natural::operator%=(Natural const& a) {
+	if(a == Natural{"0"}) {
+		throw "std::domain_error — Remainder by zero";
+	}
 	*this -= a*(*this/a);
     return *this;
 }
