@@ -14,14 +14,12 @@
 #include <iostream>
 
 
-/*
- * digit enumerated type
- *
- * This is used as a basis for the digit model, trying as much as possible not to use int.
+/**
+ * Base-10 digits.
+ * This is used as a basis for the Digit model, trying as much as possible not to use int.
  */
-
 enum digit {
-    ERROR = -1,
+    ERROR = -1, //!<< This value is never used by now, but may appear in a further implementation
     ZERO =  0,
     ONE =   1,
     TWO =   2,
@@ -35,13 +33,10 @@ enum digit {
 };
 
 
-/*
- * Digit class
- *
- * A digit is characterized by a digital value and a boolean overflow.
- * It overloads common operators to interact as easily as possible with the other classes.
+/**
+ * Base-10 digit class.
+ * %Digit class is used in every numeric classes and describes a base-10 digit behaviour
  */
-
 class Digit {
 private:
     digit value;

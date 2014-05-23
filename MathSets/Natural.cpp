@@ -16,22 +16,37 @@ using namespace std;
  * Constructors
  */
 
-// Base constructor
+/**
+ * \details	Instanciates a new Natural object with an empty Natural#numbers.
+ */
 Natural::Natural() {
 
 }
 
-// Digit constructor
+/**
+ * \details	Instanciates a new Natural object with a single %Digit in its Natural::numbers.
+ *
+ * \param	source	%Digit to initialize the object with.
+ */
 Natural::Natural(Digit const source) {
 	numbers.push_back(source);
 }
 
-// Copy constructor
+/**
+ * \param	source	%Natural object to initialize the instance with.
+ */
 Natural::Natural(Natural const& source) : numbers(source.numbers) {
 
 }
 
-// Most evolved constructor: String parsing
+/**
+ * \details	Instanciates a new Natural object by parsing a string.
+ * Non-digit characters will be ignored.
+ *
+ * \param	source	%Digit to initialize the instance with.
+ * 
+ * \warning A `\0` character will interrupt the parsing. Escape it to avoid any problem.
+ */
 Natural::Natural(string const& source) {
     for (string::const_iterator i {source.begin()} ; i!=source.end() ; i++) {
         if (isdigit(*i)) {
@@ -276,6 +291,9 @@ Natural& Natural::operator*=(Natural const& a) {
 	return *this;
 }
 
+/**
+ * \throws std::domain_error — Division by zero
+ */
 Natural& Natural::operator/=(Natural const& a) {
 	if(a == Natural {"0"}) {
 		throw domain_error("std::domain_error: division by zero");

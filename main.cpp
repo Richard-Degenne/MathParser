@@ -1,38 +1,38 @@
-/*
- * main.cpp
- * MathParser
+/**
+ * \file	main.cpp
+ * \brief	Test file
+ * \details	This file will be used for tests and debug session, but will have no interest for the project itself.
  *
- * CC by-nc-sa Richard Degenne
- * Created on 04/21/14
- * 
- * This file will be used for tests and debug session, but will have no interest for the project itself.
+ * \author	Richard Degenne
+ * \date	04-21-2014
+ * \copyright	CC by-nc-sa
  */
 
 #include <iostream>
-#include <limits>
-#include "Natural.h"
-#include "Digit.h"
+#include "MathSets/Natural.h"
+#include "MathSets/Digit.h"
 
-#include "examples.h"
+#include "Examples/examples.h"
 
 using namespace std;
 
 int main(int argc, const char* argv[])
 {
-	bool const DEBUG_MODE = true;
 
-	if(DEBUG_MODE) {
-		///// DEBUG ZONE /////
+	bool const CUSTOM_CODE = true; // Set this to `true` if you want to try your own code
+
+	if(CUSTOM_CODE) {
+		///// CUSTOM ZONE /////
 
 		try {
-			Natural a{"4345"}, b{"4346"};
+			Natural a{"123456"}, b{"4346"};
 			cout << a/b << " + " << a%b << endl;
 		}
 		catch (exception& e) {
 			cerr << e.what() << endl;
 		}
 
-		///// END OF DEBUG ZONE /////
+		///// END OF CUSTOM ZONE /////
 	}
 
 	else {
