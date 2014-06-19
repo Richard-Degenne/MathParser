@@ -12,6 +12,7 @@
 #include <iostream>
 #include "MathSets/Natural.h"
 #include "MathSets/Digit.h"
+#include "MathSets/Integer.h"
 
 #include "Examples/examples.h"
 
@@ -26,8 +27,12 @@ int main(int argc, const char* argv[])
 		///// CUSTOM ZONE /////
 
 		try {
-			Natural a{"123456"}, b{"4346"};
-			cout << a/b << " + " << a%b << endl;
+			Digit a {TWO}, b {THREE};
+			cout << a+b << endl;
+			cout << a-b << endl;
+			cout << a*b << endl;
+			cout << a/b << endl;
+			cout << a%b << endl;
 		}
 		catch (exception& e) {
 			cerr << e.what() << endl;

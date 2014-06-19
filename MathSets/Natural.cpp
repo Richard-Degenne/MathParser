@@ -1,6 +1,6 @@
 /**
  * \file	Natural.cpp
- * \brief	Natural source file
+ * \brief	%Natural source file
  * \details This file implements all of the Natural features.
  *
  * \author Richard Degenne
@@ -41,9 +41,8 @@ Natural::Natural(Natural const& source) : numbers(source.numbers) {
 
 /**
  * \details	Instanciates a new Natural object by parsing a string.
- * Non-digit characters will be ignored.
  *
- * \param	source	%Digit to initialize the instance with.
+ * \param	source	String to parse for initializing.
  * \throws	std::range_error — Non-digit character
  */
 Natural::Natural(string const& source) {
@@ -82,7 +81,7 @@ Natural::Natural(string const& source) {
                     toPush = NINE;
                     break;
                 default:
-					throw range_error("std::range_error — Non-digit character");
+					throw range_error("std::domain_error — Non-digit character");
                     break;
             }
             numbers.push_back(toPush);
@@ -435,7 +434,7 @@ bool operator<=(Natural const& a, Natural const& b) {
  * Stream operators overload
  */
 
-ostream& operator<<(ostream& stream, Natural const& integer) {
-    integer.printTo(stream);
+ostream& operator<<(ostream& stream, Natural const& toPrint) {
+    toPrint.printTo(stream);
     return stream;
 }

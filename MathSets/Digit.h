@@ -1,6 +1,8 @@
 /**
  * \file	Digit.h
- * \brief	Digit header file
+ * \brief	%Digit header file
+ *
+ * \see Digit
  *
  * \author Richard Degenne
  * \date 04-22-2014
@@ -12,6 +14,8 @@
 
 #include <iostream>
 #include <stdexcept>
+
+//#include "../templates/operators.h"
 
 
 /**
@@ -108,4 +112,4 @@ Digit operator*(Digit const&, Digit const&);
 Digit operator/(Digit const&, Digit const&);
 Digit operator%(Digit const&, Digit const&);
 
-#endif
+#endif /* defined(MathParser_Digit_h) */

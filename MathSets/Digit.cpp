@@ -1,6 +1,6 @@
 /**
  * \file	Digit.cpp
- * \brief	Digit source file
+ * \brief	%Digit source file
  * \details This file implements all of the Digit features.
  *
  * \author Richard Degenne

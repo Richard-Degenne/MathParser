@@ -16,6 +16,7 @@
 #include <vector>
 #include <stdexcept>
 #include "Digit.h"
+//#include "../templates/operators.h"
 
 /**
  * %Natural integer set.
@@ -76,4 +77,4 @@ Natural operator*(Natural const&, Natural const&);
 Natural operator/(Natural const&, Natural const&);
 Natural operator%(Natural const&, Natural const&);
 
-#endif
+#endif /* defined(MathParser_Natural_h) */
