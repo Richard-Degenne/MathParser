@@ -58,7 +58,7 @@ private:
 	 * \see Digit::getOverflow()
 	 */
     bool overflow;
-    
+
     // Setters
     void incrementValue();
     void decrementValue();
@@ -67,20 +67,20 @@ private:
     void printTo(std::ostream&) const;
     bool isEqualTo(Digit const&) const;
     bool isGreaterThan(Digit const&) const;
-    
+
 public:
     // Constructors
     Digit(); //!< Base constructor
     Digit(digit); //!< Specialized constructor
     Digit(Digit const&); //!< Copy constructor
     Digit(char const); //!< Parsing constructor
-    
+
     // Getters
     bool getOverflow() const; //!< Getter for overflow
-    
+
     // Setters
     void resetOverflow(); //!< Clears the object's Digit::overflow
-    
+
     // Short operators overload
     Digit& operator= (Digit const&);
     Digit& operator+=(Digit const&);

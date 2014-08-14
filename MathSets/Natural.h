@@ -23,6 +23,7 @@
  * Please note that 0 is included in this set.
  */
 class Natural {
+    friend class Integer;
 	protected:
 		/**
 		 * Natural numbers Digit array.
@@ -46,7 +47,7 @@ class Natural {
 		Natural(Digit const); //!< %Digit constructor
 		Natural(Natural const&); //!< Copy constructor
 		Natural(std::string const&); //!< Parsing constructor
-		
+
 		// Short operators overload
 		Natural& operator+=(Natural const&);
 		Natural& operator-=(Natural const&);

@@ -1,5 +1,5 @@
 /**
- * \file    Integer.cpp
+ * \file	Integer.cpp
  * \brief	%Integer source file
  * \details This file implements all of the Integer features.
  *
@@ -19,7 +19,7 @@ using namespace std;
  */
 
 /**
- * \details	Instanciates a new Natural object with an empty Natural::numbers.
+ * \details	Instanciates a new Natural object with an empty Integer::value.
  */
 Integer::Integer() : sign{false} {
 
@@ -31,14 +31,13 @@ Integer::Integer() : sign{false} {
  * \param	source	%Digit to initialize the object with.
  * \param   newSign Sign to initialisze the object with.
  */
-Integer::Integer(Digit const source, bool const newSign) : sign{newSign} {
-	numbers.push_back(source);
+Integer::Integer(Digit const source, bool const newSign) : sign{newSign}, value{source} {
 }
 
 /**
  * \param	source	%Integer object to initialize the instance with.
  */
-Integer::Integer(Integer const& source) : Natural{source}, sign{source.sign} {
+Integer::Integer(Integer const& source) : value{source.value}, sign{source.sign} {
 
 }
 
@@ -52,7 +51,7 @@ Integer::Integer(Integer const& source) : Natural{source}, sign{source.sign} {
  * \example Integer {"1234"}
  * \example Integer {"-1234"}
  */
-Integer::Integer(string const& source) : Natural{source[0] == '-' ? source.substr(1,source.npos) : source} { // Don't send the `-` character if present to avoid expection
+Integer::Integer(string const& source) : sign{source[0]=='-'}, value{source[0]=='-' ? source.substr(1,source.npos) : source} {
 
 }
 
@@ -62,8 +61,8 @@ Integer::Integer(string const& source) : Natural{source[0] == '-' ? source.subst
  */
 
 void Integer::trim() {
-    Natural::trim();
-    sign = *this != Natural{"0"}; // Sign is set to false if *this == 0, to avoid having "-0".
+	value.trim();
+	sign = *this != Integer{"0"}; // Sign is set to false if *this == 0, to avoid having "-0".
 }
 
 
@@ -72,26 +71,26 @@ void Integer::trim() {
  */
 
 void Integer::printTo(ostream& stream) const {
-    if(sign) {
-        cout << "-";
-    }
-    Natural::printTo(cout);
+	if(sign) {
+		cout << "-";
+	}
+	value.printTo(cout);
 }
 
 bool Integer::isEqualTo(Integer const& a) const {
-    if (sign == a.sign) {
-        return Natural::isEqualTo(a);
-    }
-    else {
-        return false;
-    }
+	if (sign == a.sign) {
+		return value.isEqualTo(a.value);
+	}
+	else {
+		return false;
+	}
 }
 
 bool Integer::isGreaterThan(Integer const& a) const {
-    if (sign != a.sign) {
-        return a.sign;
-    }
-    return sign ^ Natural::isGreaterThan(a);
+	if (sign != a.sign) {
+		return a.sign;
+	}
+	return sign ^ value.isGreaterThan(a.value);
 }
 
 
@@ -100,50 +99,55 @@ bool Integer::isGreaterThan(Integer const& a) const {
  */
 
 Integer& Integer::operator+=(Integer const& a) {
-    if(sign == a.sign) {
-        Natural::operator+=(a);
-    }
-    else {
-        if(*this >= a) {
-            Natural::operator-=(a);
-        }
-        else {
-            Integer copy {a};
-            copy.Natural::operator-=(*this);
-            *this = copy;
-        }
-        sign = *this >= a ? this->sign : a.sign;
-    }
-    return *this;
+	if(sign == a.sign) { // If both operands are positive or negative
+		value += a.value;
+	}
+	else {
+		if(!sign) { // If *this is positive, then a is negative, so (*this + -a) = (*this - a)
+			value -= a.value;
+		}
+		else { // If *this is negative, then a is positive, so (-*this + a) = (a - *this)
+			Integer copy{a};
+			copy.value -= value;
+			*this = copy;
+		}
+		sign = *this >= a ? this->sign : a.sign;
+	}
+	return *this;
 }
 
 Integer& Integer::operator-=(Integer const& a) {
-    if(sign == a.sign) {
-        if(*this >= a) {
-            Natural::operator-=(a);
-        }
-        else {
-            Integer copy {a};
-            copy.Natural::operator-=(*this);
-            *this = copy;
-        }
-    }
-    else {
-        Natural::operator+=(a);
-        sign = *this >= a ? this->sign : a.sign;
-    }
-    return *this;
+	if(sign == a.sign) { // If both operands are positive or negative
+		if(*this >= a) {
+			value -= a.value;
+		}
+		else {
+			Integer copy{a};
+			copy.value -= this->value;
+			*this = copy;
+		}
+	}
+	else { // If operands have different signs
+		value += a.value; // Sign remains unchanged
+	}
+	return *this;
 }
 
 Integer& Integer::operator*=(Integer const& a) {
-    Natural::operator*=(a);
-    sign ^= a.sign;
-    return *this;
+	value *= a.value;
+	sign ^= a.sign;
+	return *this;
 }
 
 Integer& Integer::operator/=(Integer const& a) {
-    Natural::operator/=(a);
-    sign ^= a.sign;
+	value /= a.value;
+	sign ^= a.sign;
+	return *this;
+}
+Integer& Integer::operator%=(Integer const& a) {
+    if(sign || a.sign) {
+		throw domain_error("std::domain_error: modulo by/of negative value");
+    }
     return *this;
 }
 
@@ -153,33 +157,33 @@ Integer& Integer::operator/=(Integer const& a) {
  */
 
 Integer operator+(Integer const& a, Integer const& b) {
-    Integer copy {a};
-    copy += b;
-    return copy;
+	Integer copy {a};
+	copy += b;
+	return copy;
 }
 
 Integer operator-(Integer const& a, Integer const& b) {
-    Integer copy {a};
-    copy -= b;
-    return copy;
+	Integer copy {a};
+	copy -= b;
+	return copy;
 }
 
 Integer operator*(Integer const& a, Integer const& b) {
-    Integer copy {a};
-    copy *= b;
-    return copy;
+	Integer copy {a};
+	copy *= b;
+	return copy;
 }
 
 Integer operator/(Integer const& a, Integer const& b) {
-    Integer copy {a};
-    copy /= b;
-    return copy;
+	Integer copy {a};
+	copy /= b;
+	return copy;
 }
 
 Integer operator%(Integer const& a, Integer const& b) {
-    Integer copy {a};
-    copy %= b;
-    return copy;
+	Integer copy {a};
+	copy %= b;
+	return copy;
 }
 
 
@@ -217,6 +221,6 @@ bool operator<=(Integer const& a, Integer const& b) {
  */
 
 ostream& operator<<(ostream& stream, Integer const& toPrint) {
-    toPrint.printTo(stream);
-    return stream;
+	toPrint.printTo(stream);
+	return stream;
 }
