@@ -1,5 +1,5 @@
 /**
- * \file    Rational.cpp
+ * \file	Rational.cpp
  * \brief	%Rational source file
  * \details This file implements all of the Rational features.
  *
@@ -26,7 +26,7 @@ Rational::Rational() : denominator{ONE, false} {
 }
 
 /**
- * \details	Instanciates a new Natural object with a single %Digit in its Rational::numerator.numbers and a digit#ONE in its Rational::denominator.numbers.
+ * \details	Instanciates a new Rational object with a single %Digit in its Rational::numerator.value and a digit#ONE in its Rational::denominator.value.
  *
  * \param	source	%Digit to initialize the object with.
  * \param   newSign Sign that will be applied to Rational::numerator::sign
@@ -49,8 +49,9 @@ Rational::Rational(Rational const& source) : numerator{source.numerator}, denomi
  * \throws	std::range_error — Non-digit character
  */
 Rational::Rational(string const& source) {
-    // TODO Parse strings to get 2 substrings: 1 for numerator, 1 for denominator
-    // TODO Parse sign and '/' character
+	int pos = source.find('/');
+	Integer numerator{source.substr(0,pos)};
+	Integer denominator{source.substr(pos+1)};
 }
 
 
@@ -59,7 +60,13 @@ Rational::Rational(string const& source) {
  */
 
 void Rational::trim() {
-
+	numerator.sign ^= denominator.sign; // See a truth table to understand this one
+	denominator.sign = false;
+	Natural toDivide{gcd(numerator.value, denominator.value)}; // TODO Implement gcd()
+	if(toDivide != Natural{"1"}) {
+		numerator /= gcd;
+		denominator /= gcd;
+	}
 }
 
 
@@ -72,11 +79,11 @@ void Rational::printTo(ostream& stream) const {
 }
 
 bool Rational::isEqualTo(Rational const& a) const {
-    return false;
+	return false;
 }
 
 bool Rational::isGreaterThan(Rational const& a) const {
-    return false;
+	return false;
 }
 
 
@@ -85,23 +92,23 @@ bool Rational::isGreaterThan(Rational const& a) const {
  */
 
 Rational& Rational::operator+=(Rational const& a) {
-    return *this;
+	return *this;
 }
 
 Rational& Rational::operator-=(Rational const& a) {
-    return *this;
+	return *this;
 }
 
 Rational& Rational::operator*=(Rational const& a) {
-    return *this;
+	return *this;
 }
 
 Rational& Rational::operator/=(Rational const& a) {
-    return *this;
+	return *this;
 }
 
 Rational& Rational::operator%=(Rational const& a) {
-    return *this;
+	return *this;
 }
 
 
@@ -110,33 +117,33 @@ Rational& Rational::operator%=(Rational const& a) {
  */
 
 Rational operator+(Rational const& a, Rational const& b) {
-    Rational copy {a};
-    copy += b;
-    return copy;
+	Rational copy {a};
+	copy += b;
+	return copy;
 }
 
 Rational operator-(Rational const& a, Rational const& b) {
-    Rational copy {a};
-    copy -= b;
-    return copy;
+	Rational copy {a};
+	copy -= b;
+	return copy;
 }
 
 Rational operator*(Rational const& a, Rational const& b) {
-    Rational copy {a};
-    copy *= b;
-    return copy;
+	Rational copy {a};
+	copy *= b;
+	return copy;
 }
 
 Rational operator/(Rational const& a, Rational const& b) {
-    Rational copy {a};
-    copy /= b;
-    return copy;
+	Rational copy {a};
+	copy /= b;
+	return copy;
 }
 
 Rational operator%(Rational const& a, Rational const& b) {
-    Rational copy {a};
-    copy %= b;
-    return copy;
+	Rational copy {a};
+	copy %= b;
+	return copy;
 }
 
 
@@ -174,6 +181,25 @@ bool operator<=(Rational const& a, Rational const& b) {
  */
 
 ostream& operator<<(ostream& stream, Rational const& toPrint) {
-    toPrint.printTo(stream);
-    return stream;
+	toPrint.printTo(stream);
+	return stream;
+}
+
+/*
+ * Miscellaneous
+ */
+
+Integer gcd(Integer const& a, Integer const& b) {
+	Integer temp{ZERO,false};
+		if(m < n) {
+				temp = m;
+				m = n;
+				n = temp;
+		}
+		while(n != 0) {
+				temp = m % n;
+				m = n;
+				n = temp;
+		}
+		return m;
 }

@@ -24,6 +24,7 @@
  *
  */
 class Integer {
+	friend class Rational;
 	private:
 		/**
 		 * %Integer sign.

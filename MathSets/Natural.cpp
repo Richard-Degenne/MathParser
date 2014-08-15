@@ -46,7 +46,6 @@ Natural::Natural(Natural const& source) : numbers(source.numbers) {
  * \throws	std::range_error — Non-digit character
  */
 Natural::Natural(string const& source) {
-	cout << "New Natural. Source : '" << source << "'" << endl;
 	for (string::const_iterator i {source.begin()} ; i!=source.end() ; i++) {
 		Digit toPush{};
 		switch (*i) {
