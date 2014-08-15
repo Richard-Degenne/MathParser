@@ -46,46 +46,45 @@ Natural::Natural(Natural const& source) : numbers(source.numbers) {
  * \throws	std::range_error — Non-digit character
  */
 Natural::Natural(string const& source) {
+	cout << "New Natural. Source : '" << source << "'" << endl;
 	for (string::const_iterator i {source.begin()} ; i!=source.end() ; i++) {
-		if (isdigit(*i)) {
-			Digit toPush{};
-			switch (*i) {
-				case '0':
-					toPush = ZERO;
-					break;
-				case '1':
-					toPush = ONE;
-					break;
-				case '2':
-					toPush = TWO;
-					break;
-				case '3':
-					toPush = THREE;
-					break;
-				case '4':
-					toPush = FOUR;
-					break;
-				case '5':
-					toPush = FIVE;
-					break;
-				case '6':
-					toPush = SIX;
-					break;
-				case '7':
-					toPush = SEVEN;
-					break;
-				case '8':
-					toPush = EIGHT;
-					break;
-				case '9':
-					toPush = NINE;
-					break;
-				default:
-					throw range_error("std::domain_error — Non-digit character");
-					break;
-			}
-			numbers.push_back(toPush);
+		Digit toPush{};
+		switch (*i) {
+			case '0':
+				toPush = ZERO;
+				break;
+			case '1':
+				toPush = ONE;
+				break;
+			case '2':
+				toPush = TWO;
+				break;
+			case '3':
+				toPush = THREE;
+				break;
+			case '4':
+				toPush = FOUR;
+				break;
+			case '5':
+				toPush = FIVE;
+				break;
+			case '6':
+				toPush = SIX;
+				break;
+			case '7':
+				toPush = SEVEN;
+				break;
+			case '8':
+				toPush = EIGHT;
+				break;
+			case '9':
+				toPush = NINE;
+				break;
+			default:
+				throw range_error("std::range_error: Non-digit character");
+				break;
 		}
+		numbers.push_back(toPush);
 	}
 	trim();
 }

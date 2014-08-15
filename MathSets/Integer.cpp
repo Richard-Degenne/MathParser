@@ -45,7 +45,7 @@ Integer::Integer(Integer const& source) : value{source.value}, sign{source.sign}
  * \details	Instanciates a new Integer object by parsing a string.
  *  Negative numbers are declared by using the `-` character at the beginning of the string.
  *
- * \param	source	%Digit to initialize the instance with.
+ * \param	source	String to initialize the instance with.
  * \throws	std::range_error — Non-digit character
  *
  * \example Integer {"1234"}
