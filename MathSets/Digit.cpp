@@ -21,7 +21,7 @@ using namespace std;
  * \details	Instanciates a new %Digit object with a `false` overflow.
  */
 Digit::Digit() : overflow(false) {
-    
+
 }
 
 /**
@@ -80,7 +80,7 @@ Digit::Digit(char const source) : overflow(false){
 		case '9':
 			value = NINE;
 			break;
-			
+
 		default:
 			throw range_error("std::range_error — Non-digit character");
 			break;
