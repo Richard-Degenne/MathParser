@@ -62,7 +62,9 @@ Integer::Integer(string const& source) : sign{source[0]=='-'}, value{source[0]==
 
 void Integer::trim() {
 	value.trim();
-	sign = *this != Integer{"0"}; // Sign is set to false if *this == 0, to avoid having "-0".
+	if(value == Natural{"0"}) {
+		sign = false; // Sign is set to false if value < 0, to avoid having "-0".
+	}
 }
 
 
@@ -72,9 +74,9 @@ void Integer::trim() {
 
 void Integer::printTo(ostream& stream) const {
 	if(sign) {
-		cout << "-";
+		stream << "-";
 	}
-	value.printTo(cout);
+	value.printTo(stream);
 }
 
 bool Integer::isEqualTo(Integer const& a) const {
@@ -103,45 +105,50 @@ Integer& Integer::operator+=(Integer const& a) {
 		value += a.value;
 	}
 	else {
-		if(!sign) { // If *this is positive, then a is negative, so (*this + -a) = (*this - a)
+		if(value >= a.value) { // *this has the greatest absolute value
 			value -= a.value;
 		}
-		else { // If *this is negative, then a is positive, so (-*this + a) = (a - *this)
+		else { // If *this has the least absolute value
 			Integer copy{a};
 			copy.value -= value;
 			*this = copy;
+			sign = a.sign;
 		}
-		sign = *this >= a ? this->sign : a.sign;
 	}
+	trim();
 	return *this;
 }
 
 Integer& Integer::operator-=(Integer const& a) {
 	if(sign == a.sign) { // If both operands are positive or negative
-		if(*this >= a) {
+		if(value >= a.value) {
 			value -= a.value;
 		}
 		else {
 			Integer copy{a};
 			copy.value -= this->value;
 			*this = copy;
+			sign = !sign;
 		}
 	}
 	else { // If operands have different signs
 		value += a.value; // Sign remains unchanged
 	}
+	trim();
 	return *this;
 }
 
 Integer& Integer::operator*=(Integer const& a) {
 	value *= a.value;
 	sign ^= a.sign;
+	trim();
 	return *this;
 }
 
 Integer& Integer::operator/=(Integer const& a) {
 	value /= a.value;
 	sign ^= a.sign;
+	trim();
 	return *this;
 }
 Integer& Integer::operator%=(Integer const& a) {
@@ -164,6 +171,7 @@ Integer operator+(Integer const& a, Integer const& b) {
 
 Integer operator-(Integer const& a, Integer const& b) {
 	Integer copy {a};
+	cout << "Computing (" << copy << " -= " << b << ")" << endl;
 	copy -= b;
 	return copy;
 }
