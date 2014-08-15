@@ -50,7 +50,7 @@ class Integer {
 	public:
 		// Constructors
 		Integer(); //!< Default constructor
-		Integer(Digit const, bool const); //!< %Digit constructor
+		Integer(Digit const, bool const = false); //!< %Digit constructor
 		Integer(Integer const&); //!< Copy constructor
 		Integer(std::string const&); //!< Parsing constructor
 		// Short operators overload

@@ -152,10 +152,11 @@ Integer& Integer::operator/=(Integer const& a) {
 	return *this;
 }
 Integer& Integer::operator%=(Integer const& a) {
-    if(sign || a.sign) {
-		throw domain_error("std::domain_error: modulo by/of negative value");
-    }
-    return *this;
+	if(a == Integer{"0"}) {
+		throw "std::domain_error — Remainder by zero";
+	}
+	*this -= a*(*this/a);
+	return *this;
 }
 
 

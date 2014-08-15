@@ -52,6 +52,8 @@ Rational::Rational(string const& source) {
 	int pos = source.find('/');
 	Integer numerator{source.substr(0,pos)};
 	Integer denominator{source.substr(pos+1)};
+	cout << numerator << "/" << denominator << endl;
+	trim();
 }
 
 
@@ -62,10 +64,16 @@ Rational::Rational(string const& source) {
 void Rational::trim() {
 	numerator.sign ^= denominator.sign; // See a truth table to understand this one
 	denominator.sign = false;
-	Natural toDivide{gcd(numerator.value, denominator.value)}; // TODO Implement gcd()
-	if(toDivide != Natural{"1"}) {
-		numerator /= gcd;
-		denominator /= gcd;
+	Integer copynum{numerator}, temp{ZERO}, copyden{denominator};
+	while(copyden != Integer{ZERO}) {
+		temp = copyden;
+		copyden = copynum % copyden;
+		copynum = temp;
+	}
+	cout << "td: " << copynum << endl;
+	if(copynum != Integer{"1"}) {
+		numerator /= copynum;
+		denominator /= copynum;
 	}
 }
 
@@ -75,11 +83,11 @@ void Rational::trim() {
  */
 
 void Rational::printTo(ostream& stream) const {
-
+	stream << numerator << "/" << denominator;
 }
 
 bool Rational::isEqualTo(Rational const& a) const {
-	return false;
+	return numerator == a.numerator && denominator == a.denominator;
 }
 
 bool Rational::isGreaterThan(Rational const& a) const {
@@ -191,15 +199,18 @@ ostream& operator<<(ostream& stream, Rational const& toPrint) {
 
 Integer gcd(Integer const& a, Integer const& b) {
 	Integer temp{ZERO,false};
+	Integer m{a}, n{b};
+	cout << "M: " << m << endl << "A: " << a << endl;
 		if(m < n) {
 				temp = m;
 				m = n;
 				n = temp;
 		}
-		while(n != 0) {
+		while(n != Integer{ZERO,false}) {
 				temp = m % n;
 				m = n;
 				n = temp;
 		}
+		cout << "GCD: " << m << endl;
 		return m;
 }
