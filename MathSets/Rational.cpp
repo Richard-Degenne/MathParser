@@ -103,14 +103,23 @@ Rational& Rational::operator+=(Rational const& a) {
 }
 
 Rational& Rational::operator-=(Rational const& a) {
+	Rational copy{a};
+	copy.numerator *= Integer{ONE,true};
+	*this += copy;
 	return *this;
 }
 
 Rational& Rational::operator*=(Rational const& a) {
+	numerator *= a.numerator;
+	denominator *= a.denominator;
+	trim();
 	return *this;
 }
 
 Rational& Rational::operator/=(Rational const& a) {
+	numerator *= a.denominator;
+	denominator *= a.numerator;
+	trim();
 	return *this;
 }
 
