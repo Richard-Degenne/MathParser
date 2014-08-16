@@ -155,11 +155,11 @@ bool Natural::isGreaterThan(Natural const& a) const {
 		return false;
 	}
 	else {
-		for(int i{0}; i<numbers.size(); i++) {
-			if(numbers[i] > a.numbers[i]) {
+		for(vector<Digit>::const_iterator i{numbers.begin()}, j{a.numbers.begin()} ; i!=numbers.end() ; i++, j++) {
+			if(*i > *j) {
 				return true;
 			}
-			else if(numbers[i] < a.numbers[i]) {
+			else if(*i < *j) {
 				return false;
 			}
 		}
@@ -303,16 +303,17 @@ Natural& Natural::operator/=(Natural const& a) {
 		*this = Natural {"0"};
 		return *this;
 	}
-	Natural result {};
+	Natural result {ZERO};
 	Natural remainder {*(this->numbers.begin())};
 	vector<Digit>::const_iterator toPush {this->numbers.begin()+1};
 	Digit toAdd {};
 
 	// Naive algorithm
-	while(toPush != this->numbers.end()) {
+	do {
 		// Bringing down as many digits as necessary/possible to continue
 		while(remainder < a && toPush != this->numbers.end()) {
 			remainder.numbers.push_back(*toPush);
+			
 			toPush++;
 		}
 
@@ -323,7 +324,7 @@ Natural& Natural::operator/=(Natural const& a) {
 			toAdd++;
 		}
 		result.numbers.push_back(toAdd);
-	}
+	} while(toPush != this->numbers.end());
 
 	*this = result;
 	trim();

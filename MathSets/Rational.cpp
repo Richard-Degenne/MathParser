@@ -48,11 +48,7 @@ Rational::Rational(Rational const& source) : numerator{source.numerator}, denomi
  * \param	source	%Digit to initialize the instance with.
  * \throws	std::range_error — Non-digit character
  */
-Rational::Rational(string const& source) {
-	int pos = source.find('/');
-	Integer numerator{source.substr(0,pos)};
-	Integer denominator{source.substr(pos+1)};
-	cout << numerator << "/" << denominator << endl;
+Rational::Rational(string const& source) : numerator{source.substr(0,source.find('/'))}, denominator{source.substr(source.find('/')+1)} {
 	trim();
 }
 
@@ -62,19 +58,20 @@ Rational::Rational(string const& source) {
  */
 
 void Rational::trim() {
+	numerator.trim();
+	denominator.trim();
 	numerator.sign ^= denominator.sign; // See a truth table to understand this one
 	denominator.sign = false;
-	Integer copynum{numerator}, temp{ZERO}, copyden{denominator};
-	while(copyden != Integer{ZERO}) {
+	
+	Integer copynum{numerator}, copyden{denominator}, temp{};
+	char pow;
+	while(copyden != Integer{"0"}) {
 		temp = copyden;
 		copyden = copynum % copyden;
 		copynum = temp;
 	}
-	cout << "td: " << copynum << endl;
-	if(copynum != Integer{"1"}) {
-		numerator /= copynum;
-		denominator /= copynum;
-	}
+	numerator /= copynum;
+	denominator /= copynum;
 }
 
 

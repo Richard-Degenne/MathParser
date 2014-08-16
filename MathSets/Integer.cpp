@@ -37,7 +37,7 @@ Integer::Integer(Digit const source, bool const newSign) : sign{newSign}, value{
 /**
  * \param	source	%Integer object to initialize the instance with.
  */
-Integer::Integer(Integer const& source) : value{source.value}, sign{source.sign} {
+Integer::Integer(Integer const& source) : sign{source.sign}, value{source.value} {
 
 }
 
