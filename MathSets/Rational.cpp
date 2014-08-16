@@ -64,7 +64,6 @@ void Rational::trim() {
 	denominator.sign = false;
 	
 	Integer copynum{numerator}, copyden{denominator}, temp{};
-	char pow;
 	while(copyden != Integer{"0"}) {
 		temp = copyden;
 		copyden = copynum % copyden;
@@ -88,7 +87,7 @@ bool Rational::isEqualTo(Rational const& a) const {
 }
 
 bool Rational::isGreaterThan(Rational const& a) const {
-	return false;
+	return numerator*a.denominator > a.numerator*denominator;
 }
 
 
@@ -97,6 +96,9 @@ bool Rational::isGreaterThan(Rational const& a) const {
  */
 
 Rational& Rational::operator+=(Rational const& a) {
+	numerator = numerator*a.denominator + denominator*a.numerator;
+	denominator *= a.denominator;
+	trim();
 	return *this;
 }
 
@@ -188,26 +190,4 @@ bool operator<=(Rational const& a, Rational const& b) {
 ostream& operator<<(ostream& stream, Rational const& toPrint) {
 	toPrint.printTo(stream);
 	return stream;
-}
-
-/*
- * Miscellaneous
- */
-
-Integer gcd(Integer const& a, Integer const& b) {
-	Integer temp{ZERO,false};
-	Integer m{a}, n{b};
-	cout << "M: " << m << endl << "A: " << a << endl;
-		if(m < n) {
-				temp = m;
-				m = n;
-				n = temp;
-		}
-		while(n != Integer{ZERO,false}) {
-				temp = m % n;
-				m = n;
-				n = temp;
-		}
-		cout << "GCD: " << m << endl;
-		return m;
 }

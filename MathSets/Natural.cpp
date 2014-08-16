@@ -313,10 +313,10 @@ Natural& Natural::operator/=(Natural const& a) {
 		// Bringing down as many digits as necessary/possible to continue
 		while(remainder < a && toPush != this->numbers.end()) {
 			remainder.numbers.push_back(*toPush);
-			
 			toPush++;
 		}
-
+		
+		remainder.trim(); // Trimming, in case of successive zeros in the dividend
 		// Calculating partial quotient
 		toAdd = Digit {ZERO};
 		while(remainder >= a) {

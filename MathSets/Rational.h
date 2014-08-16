@@ -69,7 +69,4 @@ Rational operator*(Rational const&, Rational const&);
 Rational operator/(Rational const&, Rational const&);
 Rational operator%(Rational const&, Rational const&);
 
-// Miscellaneous
-Integer gcd(Integer const&, Integer const&);
-
 #endif /* defined(MathParser__Rational_h) */
