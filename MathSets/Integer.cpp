@@ -153,9 +153,15 @@ Integer& Integer::operator/=(Integer const& a) {
 }
 Integer& Integer::operator%=(Integer const& a) {
 	if(a == Integer{"0"}) {
-		throw "std::domain_error — Remainder by zero";
+		throw "std::domain_error — Modulo by zero";
 	}
-	*this -= a*(*this/a);
+	if(sign) {
+		value = a.value - (value%a.value); // (-a)%b = b - (a%b)
+		sign = false; // Modulo is positive
+	}
+	else {
+		value %= a.value;
+	}
 	return *this;
 }
 

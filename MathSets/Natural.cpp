@@ -335,7 +335,7 @@ Natural& Natural::operator/=(Natural const& a) {
  */
 Natural& Natural::operator%=(Natural const& a) {
 	if(a == Natural{"0"}) {
-		throw "std::domain_error — Remainder by zero";
+		throw "std::domain_error — Modulo by zero";
 	}
 	*this -= a*(*this/a);
 	return *this;
