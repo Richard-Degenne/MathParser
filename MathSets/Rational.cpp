@@ -164,6 +164,39 @@ Rational& Rational::operator%=(Rational const& a) {
 	return *this;
 }
 
+/**
+ * \details Incrementing means here "adding 1".
+ */
+Rational& Rational::operator++() {
+	numerator += denominator;
+	return *this;
+}
+
+/**
+ * \details Incrementing means here "adding 1".
+ */
+Rational Rational::operator++(int dummy) {
+	Rational copy{*this};
+	++(*this);
+	return copy;
+}
+
+/**
+ * \details Decrementing means here "subtracting 1".
+ */
+Rational& Rational::operator--() {
+	numerator -= denominator;
+	return *this;
+}
+
+/**
+ * \details Decrementing means here "subtracting 1".
+ */
+Rational Rational::operator--(int dummy) {
+	Rational copy{*this};
+	--(*this);
+	return copy;
+}
 
 /*
  * Long operators overload

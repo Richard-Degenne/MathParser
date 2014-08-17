@@ -38,17 +38,18 @@ class Rational {
 		Rational(Digit const, bool const); //!< %Digit constructor
 		Rational(Rational const&); //!< Copy constructor
 		Rational(std::string const&); //!< Parsing constructor
+		
 		// Short operators overload
 		Rational& operator+=(Rational const&);
 		Rational& operator-=(Rational const&);
 		Rational& operator*=(Rational const&);
 		Rational& operator/=(Rational const&);
 		Rational& operator%=(Rational const&);
-		/*Rational& operator++(); //!< Pre-fixed increment
-		 Rational operator++(int); //!< Post-fixed increment
-		 Rational& operator--(); //!< Pre-fixed decrement
-		 Rational operator--(int); //!< Post-fixed decrement
-		 */
+		Rational& operator++(); //!< Pre-fixed increment
+		Rational operator++(int); //!< Post-fixed increment
+		Rational& operator--(); //!< Pre-fixed decrement
+		Rational operator--(int); //!< Post-fixed decrement
+		 
 		// Relational operators overload
 		friend bool operator==(Rational const&, Rational const&);
 		friend bool operator!=(Rational const&, Rational const&);
