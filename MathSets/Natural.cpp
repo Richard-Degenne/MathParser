@@ -289,11 +289,11 @@ Natural& Natural::operator*=(Natural const& a) {
 }
 
 /**
- * \throws std::domain_error — Division by zero
+ * \throws std::domain_error: Division by zero
  */
 Natural& Natural::operator/=(Natural const& a) {
 	if(a == Natural {"0"}) {
-		throw domain_error("std::domain_error: division by zero");
+		throw domain_error("std::domain_error: Division by zero");
 	}
 	if(*this == a) {
 		*this = Natural {"1"};
@@ -332,11 +332,11 @@ Natural& Natural::operator/=(Natural const& a) {
 }
 
 /**
- * \throws std::domain_error — Remainder by zero
+ * \throws std::domain_error: Modulo by zero
  */
 Natural& Natural::operator%=(Natural const& a) {
 	if(a == Natural{"0"}) {
-		throw "std::domain_error — Modulo by zero";
+		throw domain_error("std::domain_error: Modulo by zero");
 	}
 	*this -= a*(*this/a);
 	return *this;

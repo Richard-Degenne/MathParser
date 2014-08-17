@@ -46,9 +46,21 @@ Rational::Rational(Rational const& source) : numerator{source.numerator}, denomi
  * \details	Instanciates a new Rational object by parsing a string.
  *
  * \param	source	%Digit to initialize the instance with.
- * \throws	std::range_error — Non-digit character
+ * \throws	std::domain_error: Division by zero
  */
-Rational::Rational(string const& source) : numerator{source.substr(0,source.find('/'))}, denominator{source.substr(source.find('/')+1)} {
+Rational::Rational(string const& source) {
+	unsigned int pos = source.find('/');
+	if(pos == source.npos) { // If the '/' character is not found
+		numerator = Integer{source};
+		denominator = Integer{ONE};
+	}
+	else {
+		numerator = Integer{source.substr(0,pos)};
+		denominator = Integer{source.substr(pos+1)};
+		if(denominator == Integer{ZERO}) {
+			throw domain_error("std::domain_error: Division by zero");
+		}
+	}
 	trim();
 }
 
@@ -79,7 +91,15 @@ void Rational::trim() {
  */
 
 void Rational::printTo(ostream& stream) const {
-	stream << numerator << "/" << denominator;
+	if(numerator == Integer{"0"}) {
+		stream << "0";
+	}
+	else if(denominator == Integer{"1"}) {
+		stream << numerator;
+	}
+	else {
+		stream << numerator << "/" << denominator;
+	}
 }
 
 bool Rational::isEqualTo(Rational const& a) const {
@@ -116,14 +136,31 @@ Rational& Rational::operator*=(Rational const& a) {
 	return *this;
 }
 
+/**
+ * \throws	std::domain_error: Division by zero
+ */
 Rational& Rational::operator/=(Rational const& a) {
+	if(a.numerator == Integer{ZERO}) {
+		throw domain_error("std::domain_error: Division by zero");
+	}
 	numerator *= a.denominator;
 	denominator *= a.numerator;
 	trim();
 	return *this;
 }
 
+/**
+ * \details	Modulo operation between two Rational objects.
+ *
+ * \return	The remainder of the Euclidean division by a.
+ * \throws	std::domain_error: Modulo by zero
+ */
 Rational& Rational::operator%=(Rational const& a) {
+	if(a.numerator == Integer{"0"}) {
+		throw domain_error("std::domain_error: Modulo by zero");
+	}
+	Rational flooor{floor(*this/a)};
+	*this -= a*flooor;
 	return *this;
 }
 
@@ -199,4 +236,16 @@ bool operator<=(Rational const& a, Rational const& b) {
 ostream& operator<<(ostream& stream, Rational const& toPrint) {
 	toPrint.printTo(stream);
 	return stream;
+}
+
+
+/*
+ * Others
+ */
+ 
+Rational floor(Rational a) {
+	a.numerator /= a.denominator;
+	a.denominator = Integer{ONE};
+	
+	return a;
 }
