@@ -37,7 +37,7 @@ Integer::Integer(Digit const source, bool const newSign) : sign{newSign}, value{
 /**
  * \param	source	%Integer object to initialize the instance with.
  */
-Integer::Integer(Integer const& source) : value{source.value}, sign{source.sign} {
+Integer::Integer(Integer const& source) : sign{source.sign}, value{source.value} {
 
 }
 
@@ -45,7 +45,7 @@ Integer::Integer(Integer const& source) : value{source.value}, sign{source.sign}
  * \details	Instanciates a new Integer object by parsing a string.
  *  Negative numbers are declared by using the `-` character at the beginning of the string.
  *
- * \param	source	%Digit to initialize the instance with.
+ * \param	source	String to initialize the instance with.
  * \throws	std::range_error — Non-digit character
  *
  * \example Integer {"1234"}
@@ -152,10 +152,17 @@ Integer& Integer::operator/=(Integer const& a) {
 	return *this;
 }
 Integer& Integer::operator%=(Integer const& a) {
-    if(sign || a.sign) {
-		throw domain_error("std::domain_error: modulo by/of negative value");
-    }
-    return *this;
+	if(a == Integer{"0"}) {
+		throw "std::domain_error — Modulo by zero";
+	}
+	if(sign) {
+		value = a.value - (value%a.value); // (-a)%b = b - (a%b)
+		sign = false; // Modulo is positive
+	}
+	else {
+		value %= a.value;
+	}
+	return *this;
 }
 
 

@@ -47,45 +47,43 @@ Natural::Natural(Natural const& source) : numbers(source.numbers) {
  */
 Natural::Natural(string const& source) {
 	for (string::const_iterator i {source.begin()} ; i!=source.end() ; i++) {
-		if (isdigit(*i)) {
-			Digit toPush{};
-			switch (*i) {
-				case '0':
-					toPush = ZERO;
-					break;
-				case '1':
-					toPush = ONE;
-					break;
-				case '2':
-					toPush = TWO;
-					break;
-				case '3':
-					toPush = THREE;
-					break;
-				case '4':
-					toPush = FOUR;
-					break;
-				case '5':
-					toPush = FIVE;
-					break;
-				case '6':
-					toPush = SIX;
-					break;
-				case '7':
-					toPush = SEVEN;
-					break;
-				case '8':
-					toPush = EIGHT;
-					break;
-				case '9':
-					toPush = NINE;
-					break;
-				default:
-					throw range_error("std::domain_error — Non-digit character");
-					break;
-			}
-			numbers.push_back(toPush);
+		Digit toPush{};
+		switch (*i) {
+			case '0':
+				toPush = ZERO;
+				break;
+			case '1':
+				toPush = ONE;
+				break;
+			case '2':
+				toPush = TWO;
+				break;
+			case '3':
+				toPush = THREE;
+				break;
+			case '4':
+				toPush = FOUR;
+				break;
+			case '5':
+				toPush = FIVE;
+				break;
+			case '6':
+				toPush = SIX;
+				break;
+			case '7':
+				toPush = SEVEN;
+				break;
+			case '8':
+				toPush = EIGHT;
+				break;
+			case '9':
+				toPush = NINE;
+				break;
+			default:
+				throw range_error("std::range_error: Non-digit character");
+				break;
 		}
+		numbers.push_back(toPush);
 	}
 	trim();
 }
@@ -157,11 +155,11 @@ bool Natural::isGreaterThan(Natural const& a) const {
 		return false;
 	}
 	else {
-		for(int i{0}; i<numbers.size(); i++) {
-			if(numbers[i] > a.numbers[i]) {
+		for(vector<Digit>::const_iterator i{numbers.begin()}, j{a.numbers.begin()} ; i!=numbers.end() ; i++, j++) {
+			if(*i > *j) {
 				return true;
 			}
-			else if(numbers[i] < a.numbers[i]) {
+			else if(*i < *j) {
 				return false;
 			}
 		}
@@ -291,11 +289,11 @@ Natural& Natural::operator*=(Natural const& a) {
 }
 
 /**
- * \throws std::domain_error — Division by zero
+ * \throws std::domain_error: Division by zero
  */
 Natural& Natural::operator/=(Natural const& a) {
 	if(a == Natural {"0"}) {
-		throw domain_error("std::domain_error: division by zero");
+		throw domain_error("std::domain_error: Division by zero");
 	}
 	if(*this == a) {
 		*this = Natural {"1"};
@@ -305,19 +303,20 @@ Natural& Natural::operator/=(Natural const& a) {
 		*this = Natural {"0"};
 		return *this;
 	}
-	Natural result {};
+	Natural result {ZERO};
 	Natural remainder {*(this->numbers.begin())};
 	vector<Digit>::const_iterator toPush {this->numbers.begin()+1};
 	Digit toAdd {};
 
 	// Naive algorithm
-	while(toPush != this->numbers.end()) {
+	do {
 		// Bringing down as many digits as necessary/possible to continue
 		while(remainder < a && toPush != this->numbers.end()) {
 			remainder.numbers.push_back(*toPush);
 			toPush++;
 		}
-
+		
+		remainder.trim(); // Trimming, in case of successive zeros in the dividend
 		// Calculating partial quotient
 		toAdd = Digit {ZERO};
 		while(remainder >= a) {
@@ -325,7 +324,7 @@ Natural& Natural::operator/=(Natural const& a) {
 			toAdd++;
 		}
 		result.numbers.push_back(toAdd);
-	}
+	} while(toPush != this->numbers.end());
 
 	*this = result;
 	trim();
@@ -333,11 +332,11 @@ Natural& Natural::operator/=(Natural const& a) {
 }
 
 /**
- * \throws std::domain_error — Remainder by zero
+ * \throws std::domain_error: Modulo by zero
  */
 Natural& Natural::operator%=(Natural const& a) {
 	if(a == Natural{"0"}) {
-		throw "std::domain_error — Remainder by zero";
+		throw domain_error("std::domain_error: Modulo by zero");
 	}
 	*this -= a*(*this/a);
 	return *this;
